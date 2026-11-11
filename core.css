@@ -778,4 +778,8 @@ body, html {
     .os-window { width: 64vw; height: 74vh; }
     .holo-time-row { font-size: 2.4rem; }
     #taskbar { height: 30px; }
+    /* PC पर कभी भी Rotate स्क्रीन नहीं दिखेगी, सिर्फ फोन को सीधा पकड़ने पर दिखेगी */
+@media (hover: hover) and (pointer: fine) {
+    #rotate-guard { display: none !important; }
 }
+
