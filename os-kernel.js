@@ -1,6 +1,6 @@
 /* ============================================================================
-   SYNAPSE OS KERNEL v1.0 — POWERED BY LEGEND
-   Handles: Bootloader, WebAudio Synth, Draggable Windows, Terminal & Aero-Touch
+   SYNAPSE OS KERNEL v1.2 (LANDSCAPE WIDESCREEN EDITION) — POWERED BY LEGEND
+   Handles: Fullscreen Landscape Lock, Quantum Clock, Battery API, Touch Windows
    ============================================================================ */
 
 const Kernel = (() => {
@@ -10,7 +10,7 @@ const Kernel = (() => {
     let audioCtx = null;
     const openWindows = {};
 
-    // --- 1. WEBAUDIO SCI-FI SOUND SYNTHESIZER (Zero external MP3 needed) ---
+    // --- 1. WEBAUDIO SCI-FI SOUND SYNTHESIZER ---
     function playTone(freq = 880, duration = 0.06, type = 'sine') {
         if (!audioEnabled) return;
         try {
@@ -28,14 +28,32 @@ const Kernel = (() => {
         } catch (e) {}
     }
 
-    // --- 2. BIOS BOOT SEQUENCE ---
+    // --- 2. FORCE FULLSCREEN & LANDSCAPE LOCK ---
+    async function forceLandscapeFullscreen() {
+        playTone(1050, 0.08, 'triangle');
+        try {
+            const docEl = document.documentElement;
+            if (!document.fullscreenElement && docEl.requestFullscreen) {
+                await docEl.requestFullscreen();
+            } else if (!document.webkitFullscreenElement && docEl.webkitRequestFullscreen) {
+                await docEl.webkitRequestFullscreen();
+            }
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+        } catch (err) {
+            // Browser requires manual rotation if orientation lock is unsupported
+        }
+    }
+
+    // --- 3. BIOS BOOT SEQUENCE ---
     const bootMessages = [
         "[0.002] INIT SYNAPSE MICROKERNEL v4.9.0 (POWERED BY LEGEND)...",
         "[0.018] CPU0: VIRTUAL SILICON CORTEX // WEBGPU & WASM VECTOR [OK]",
         "[0.042] ALLOCATING 256 SPIKING NEURAL NETWORK SYNAPSES... [OK]",
         "[0.089] MOUNTING GATE-LEVEL FPGA LOGIC MATRIX (64-LUT)... [OK]",
         "[0.130] INITIALIZING LOCAL WI-FI WEBRTC SWARM BROKER... [OK]",
-        "[0.195] CALIBRATING MEDIAPIPE AERO-TOUCH OPTICAL ENGINE... [OK]",
+        "[0.195] CALIBRATING WIDESCREEN LANDSCAPE COCKPIT & CHRONOMETER... [OK]",
         "[0.240] ALL SYSTEMS NOMINAL. READY FOR OPERATOR HANDSHAKE."
     ];
 
@@ -58,20 +76,81 @@ const Kernel = (() => {
                 clearInterval(timer);
                 btn.classList.remove('hidden');
             }
-        }, 280);
+        }, 250);
     }
 
     function enterDesktop() {
+        forceLandscapeFullscreen();
         playTone(1200, 0.15, 'triangle');
         document.getElementById('boot-screen').classList.add('hidden');
         document.getElementById('desktop').classList.remove('hidden');
         initBackgroundGrid();
-        startTelemetry();
-        // Auto-launch terminal on boot
-        setTimeout(() => openApp('terminal'), 300);
+        startQuantumClockAndTelemetry();
+        initHardwareBattery();
+        setTimeout(() => openApp('terminal'), 350);
     }
 
-    // --- 3. CYBERPUNK ANIMATED PARTICLE MATRIX ---
+    // --- 4. HIGH-PRECISION QUANTUM CLOCK & TELEMETRY ---
+    function startQuantumClockAndTelemetry() {
+        const topClock = document.getElementById('sys-clock');
+        const topAmPm = document.getElementById('sys-ampm');
+        const holoTime = document.getElementById('holo-time');
+        const holoMs = document.getElementById('holo-ms');
+        const holoDate = document.getElementById('holo-date');
+
+        const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+        // 60FPS Millisecond Precision Clock Loop
+        function updateClock() {
+            const now = new Date();
+            let hrs = now.getHours();
+            const ampm = hrs >= 12 ? 'PM' : 'AM';
+            const hrs12 = String(hrs % 12 || 12).padStart(2, '0');
+            const hrs24 = String(hrs).padStart(2, '0');
+            const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
+            const ms = String(now.getMilliseconds()).padStart(3, '0');
+
+            topClock.innerText = `${hrs12}:${mins}:${secs}`;
+            topAmPm.innerText = ampm;
+
+            if (holoTime) {
+                holoTime.innerText = `${hrs24}:${mins}:${secs}`;
+                holoMs.innerText = `.${ms}`;
+                holoDate.innerText = `${days[now.getDay()]} // ${String(now.getDate()).padStart(2, '0')} ${months[now.getMonth()]} ${now.getFullYear()} // IST`;
+            }
+            requestAnimationFrame(updateClock);
+        }
+        requestAnimationFrame(updateClock);
+
+        // 1-Second Kernel Telemetry Loop
+        setInterval(() => {
+            const fps = (58.5 + Math.random() * 1.5).toFixed(1);
+            const ram = (42 + Object.keys(openWindows).length * 14.5 + Math.random() * 2).toFixed(1);
+            document.getElementById('hud-fps').innerText = `${fps} Hz`;
+            document.getElementById('hud-ram').innerText = `${ram} MB`;
+            document.getElementById('bar-ram').style.width = `${Math.min(95, ram)}%`;
+        }, 1000);
+    }
+
+    // --- 5. LIVE HARDWARE BATTERY MONITOR ---
+    function initHardwareBattery() {
+        const batEl = document.getElementById('sys-battery');
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(bat => {
+                const renderBat = () => {
+                    const lvl = Math.round(bat.level * 100);
+                    batEl.innerText = `${lvl}%${bat.charging ? '⚡' : ''}`;
+                };
+                renderBat();
+                bat.addEventListener('levelchange', renderBat);
+                bat.addEventListener('chargingchange', renderBat);
+            });
+        }
+    }
+
+    // --- 6. CYBERPUNK ANIMATED PARTICLE MATRIX ---
     function initBackgroundGrid() {
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
@@ -83,11 +162,11 @@ const Kernel = (() => {
             h = canvas.height = window.innerHeight;
         });
 
-        const nodes = Array.from({ length: 45 }, () => ({
+        const nodes = Array.from({ length: 42 }, () => ({
             x: Math.random() * w,
             y: Math.random() * h,
-            vx: (Math.random() - 0.5) * 0.6,
-            vy: (Math.random() - 0.5) * 0.6
+            vx: (Math.random() - 0.5) * 0.65,
+            vy: (Math.random() - 0.5) * 0.65
         }));
 
         function draw() {
@@ -108,8 +187,7 @@ const Kernel = (() => {
                 for (let j = idx + 1; j < nodes.length; j++) {
                     const dx = n.x - nodes[j].x;
                     const dy = n.y - nodes[j].y;
-                    const dist = Math.hypot(dx, dy);
-                    if (dist < 140) {
+                    if (Math.hypot(dx, dy) < 135) {
                         ctx.beginPath();
                         ctx.moveTo(n.x, n.y);
                         ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -122,20 +200,7 @@ const Kernel = (() => {
         draw();
     }
 
-    // --- 4. LIVE CLOCK & TELEMETRY ---
-    function startTelemetry() {
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('sys-clock').innerText = now.toTimeString().split(' ')[0];
-            const fps = (58 + Math.random() * 2).toFixed(1);
-            const ram = (40 + Object.keys(openWindows).length * 14.2 + Math.random() * 2).toFixed(1);
-            document.getElementById('hud-fps').innerText = `${fps} Hz`;
-            document.getElementById('hud-ram').innerText = `${ram} MB`;
-            document.getElementById('bar-ram').style.width = `${Math.min(95, ram)}%`;
-        }, 1000);
-    }
-
-    // --- 5. MULTI-WINDOW MANAGER ---
+    // --- 7. MULTI-WINDOW MANAGER (WITH MOBILE TOUCH + MOUSE DRAG) ---
     function openApp(appId) {
         playTone(960, 0.07, 'sine');
         if (openWindows[appId]) {
@@ -147,9 +212,12 @@ const Kernel = (() => {
         const win = document.createElement('div');
         win.className = 'os-window';
         win.id = `win-${appId}`;
-        const offset = Object.keys(openWindows).length * 28;
-        win.style.left = `${Math.min(140 + offset, window.innerWidth - 700)}px`;
-        win.style.top = `${Math.max(20, 40 + offset)}px`;
+        const offset = Object.keys(openWindows).length * 22;
+        const startLeft = Math.max(95, Math.min(115 + offset, window.innerWidth - 520));
+        const startTop = Math.max(10, 14 + offset);
+
+        win.style.left = `${startLeft}px`;
+        win.style.top = `${startTop}px`;
         win.style.zIndex = ++zIndexCounter;
 
         const titles = {
@@ -163,13 +231,15 @@ const Kernel = (() => {
             <div class="win-header" id="hdr-${appId}">
                 <span class="win-title">${titles[appId] || appId.toUpperCase()}</span>
                 <div class="win-actions">
-                    <button class="win-btn close" onclick="Kernel.closeApp('${appId}')">✕</button>
+                    <button class="win-btn" onclick="Kernel.toggleMax('${appId}')" title="Maximize">□</button>
+                    <button class="win-btn close" onclick="Kernel.closeApp('${appId}')" title="Close">✕</button>
                 </div>
             </div>
             <div class="win-body" id="body-${appId}"></div>
         `;
 
         win.addEventListener('mousedown', () => focusWindow(appId));
+        win.addEventListener('touchstart', () => focusWindow(appId), { passive: true });
         layer.appendChild(win);
         openWindows[appId] = win;
         makeDraggable(win, document.getElementById(`hdr-${appId}`));
@@ -182,6 +252,13 @@ const Kernel = (() => {
         else if (appId === 'swarm' && window.SwarmCluster) window.SwarmCluster.mount(container);
         else {
             container.innerHTML = `<div style="padding:20px;color:#00f0ff;">[MODULE READY TO MOUNT IN NEXT BATCH: ${appId.toUpperCase()}]</div>`;
+        }
+    }
+
+    function toggleMax(appId) {
+        playTone(680, 0.05, 'triangle');
+        if (openWindows[appId]) {
+            openWindows[appId].classList.toggle('maximized');
         }
     }
 
@@ -213,30 +290,52 @@ const Kernel = (() => {
         });
     }
 
+    // Supports both Desktop Mouse & Mobile Landscape Finger Dragging
     function makeDraggable(win, header) {
         let isDown = false, startX = 0, startY = 0;
-        header.addEventListener('mousedown', e => {
+
+        const onStart = (clientX, clientY, target) => {
+            if (target.tagName === 'BUTTON' || win.classList.contains('maximized')) return;
             isDown = true;
-            startX = e.clientX - win.offsetLeft;
-            startY = e.clientY - win.offsetTop;
-        });
-        window.addEventListener('mousemove', e => {
+            startX = clientX - win.offsetLeft;
+            startY = clientY - win.offsetTop;
+        };
+
+        const onMove = (clientX, clientY) => {
             if (!isDown) return;
-            win.style.left = `${Math.max(0, e.clientX - startX)}px`;
-            win.style.top = `${Math.max(0, e.clientY - startY)}px`;
-        });
+            const newX = Math.max(0, Math.min(window.innerWidth - 120, clientX - startX));
+            const newY = Math.max(0, Math.min(window.innerHeight - 80, clientY - startY));
+            win.style.left = `${newX}px`;
+            win.style.top = `${newY}px`;
+        };
+
+        header.addEventListener('mousedown', e => onStart(e.clientX, e.clientY, e.target));
+        window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
         window.addEventListener('mouseup', () => isDown = false);
+
+        header.addEventListener('touchstart', e => {
+            const t = e.touches[0];
+            onStart(t.clientX, t.clientY, e.target);
+        }, { passive: true });
+
+        window.addEventListener('touchmove', e => {
+            if (!isDown) return;
+            const t = e.touches[0];
+            onMove(t.clientX, t.clientY);
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => isDown = false);
     }
 
-    // --- 6. INTERACTIVE SYNAPSE TERMINAL ---
+    // --- 8. INTERACTIVE SYNAPSE TERMINAL ---
     function initTerminal(container) {
         container.innerHTML = `
-            <div class="term-output" id="term-out">SYNAPSE OS v1.0 // POWERED BY LEGEND
+            <div class="term-output" id="term-out">SYNAPSE OS v1.2 (WIDESCREEN COCKPIT) // POWERED BY LEGEND
 Type 'help' to list available kernel commands.
-──────────────────────────────────────────────────</div>
+──────────────────────────────────────────────────────────</div>
             <div class="term-input-line">
                 <span class="term-prompt">root@synapse:~#</span>
-                <input type="text" class="term-input" id="term-in" autofocus placeholder="enter command..." />
+                <input type="text" class="term-input" id="term-in" autofocus placeholder="type command (help, neofetch, fpga, neuro, swarm, time)..." />
             </div>
         `;
         const input = container.querySelector('#term-in');
@@ -257,10 +356,11 @@ Type 'help' to list available kernel commands.
   neuro      - Launch 3rd-Gen Spiking Neural Brain Engine
   swarm      - Launch Multi-Phone Wi-Fi Supercomputer Cluster
   aero       - Toggle Camera Hand-Gesture Control
+  time       - Show high-precision system timestamp
   clear      - Clear terminal buffer`;
                 } else if (cmd === 'neofetch') {
                     resp = `
-   💠 SYNAPSE // OS       OS: SYNAPSE WebKernel x86_64
+   💠 SYNAPSE // OS       OS: SYNAPSE WebKernel x86_64 (Landscape)
    ────────────────       Architecture: POWERED BY LEGEND
    HOST: Browser-V8       Silicon: Virtual 64-Gate FPGA Grid
    NEURAL: 256 SNN        Cluster: Local Wi-Fi WebRTC Mesh
@@ -269,6 +369,7 @@ Type 'help' to list available kernel commands.
                 else if (cmd === 'neuro') { openApp('neuro'); resp = 'Initializing Spiking Neural Network...'; }
                 else if (cmd === 'swarm') { openApp('swarm'); resp = 'Opening Wi-Fi Swarm Cluster Controller...'; }
                 else if (cmd === 'aero') { toggleAeroTouch(); resp = 'Toggling Aero-Touch Optical Hand Tracking...'; }
+                else if (cmd === 'time') { resp = `SYSTEM CHRONOMETER: ${new Date().toString()}`; }
                 else if (cmd === 'clear') { out.innerHTML = ''; return; }
                 else if (cmd !== '') { resp = `synapse: command not found: ${raw}`; }
 
@@ -278,7 +379,7 @@ Type 'help' to list available kernel commands.
         });
     }
 
-    // --- 7. AERO-TOUCH HAND GESTURE ENGINE (MediaPipe Hands) ---
+    // --- 9. AERO-TOUCH HAND GESTURE ENGINE (MediaPipe Hands) ---
     let mpCamera = null;
     let lastPinch = false;
 
@@ -324,7 +425,6 @@ Type 'help' to list available kernel commands.
                     drawConnectors(canvasCtx, lm, HAND_CONNECTIONS, { color: '#00f0ff', lineWidth: 2 });
                     drawLandmarks(canvasCtx, lm, { color: '#00ff9d', lineWidth: 1, radius: 2 });
 
-                    // Index Finger Tip (#8) & Thumb Tip (#4)
                     const indexTip = lm[8];
                     const thumbTip = lm[4];
 
@@ -366,7 +466,7 @@ Type 'help' to list available kernel commands.
             await mpCamera.start();
             statusEl.innerText = 'ON';
         } catch (err) {
-            alert('Camera Error: Make sure site is on HTTPS (Vercel) and camera permission is allowed.');
+            alert('Camera Error: Ensure site is running on HTTPS (Vercel) and permission is granted.');
             statusEl.innerText = 'ERR';
         }
     }
@@ -380,8 +480,10 @@ Type 'help' to list available kernel commands.
 
     return {
         enterDesktop,
+        forceLandscapeFullscreen,
         openApp,
         closeApp,
+        toggleMax,
         toggleAeroTouch,
         toggleAudio,
         playTone
