@@ -79,6 +79,14 @@ const Kernel = (() => {
 
     async function forceLandscapeFullscreen() {
         playTone(1050, 0.07, 'triangle');
+        
+        //  यह नया फिक्स है जो बटन दबाते ही उस नीली स्क्रीन को हमेशा के लिए गायब कर देगा
+        const guard = document.getElementById('rotate-guard');
+        if (guard) {
+            guard.classList.add('hidden');
+            guard.style.setProperty('display', 'none', 'important');
+        }
+        
         try {
             const docEl = document.documentElement;
             if (!document.fullscreenElement && docEl.requestFullscreen) {
