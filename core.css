@@ -1,7 +1,5 @@
 /* ============================================================================
-   SYNAPSE // OS — MASTER CORE.CSS (v4.0 COMPLETE & UNIFIED)
-   Synced with: index.html, os-kernel.js, chrono-fabric.js,
-   silicon-fpga.js, neuro-spike.js, swarm-cluster.js
+   SYNAPSE // OS — MASTER CORE.CSS (v4.1 — SVG SIZE & ROTATE LOCK FIXED)
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
@@ -38,18 +36,6 @@ html, body {
     -webkit-user-select: none;
 }
 
-/* --- CRITICAL VISIBILITY OVERRIDE (FIXES STUCK OPEN SCREEN) --- */
-.hidden,
-#boot-screen.hidden,
-#desktop.hidden,
-#cam-hud.hidden,
-#aero-cursor.hidden,
-#boot-start-btn.hidden {
-    display: none !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
 /* Custom Cyber Scrollbars */
 ::-webkit-scrollbar {
     width: 5px;
@@ -66,9 +52,9 @@ html, body {
     background: var(--cyan);
 }
 
-/* --- 1. ROTATE GUARD (HIDDEN BY DEFAULT — ONLY PHONE PORTRAIT) --- */
+/* --- 1. ROTATE GUARD (FIXED SVG SIZE & DISMISSAL) --- */
 #rotate-guard {
-    display: none !important;
+    display: none;
     position: fixed;
     inset: 0;
     background: radial-gradient(circle at center, #061326 0%, #020408 100%);
@@ -77,35 +63,46 @@ html, body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 24px;
-    gap: 14px;
+    padding: 28px;
+    gap: 16px;
 }
 
-/* Show ONLY on actual touchscreen phones held vertically (Portrait) */
+/* Constrain the SVG icon inside #rotate-guard so it never blows up */
+#rotate-guard svg,
+.rotate-icon svg {
+    width: 78px !important;
+    height: 78px !important;
+    max-width: 78px !important;
+    max-height: 78px !important;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.55));
+    animation: pulseRotate 2.2s infinite ease-in-out;
+}
+
+#rotate-guard p,
+#rotate-guard h2,
+#rotate-guard div {
+    max-width: 340px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    letter-spacing: 1.5px;
+    color: #d8f0ff;
+}
+
+#rotate-guard button {
+    max-width: 290px;
+    margin-top: 8px;
+}
+
+/* Only show on mobile portrait BEFORE dismissal */
 @media screen and (orientation: portrait) and (max-width: 900px) and (hover: none) and (pointer: coarse) {
-    #rotate-guard {
-        display: flex !important;
+    #rotate-guard:not(.hidden) {
+        display: flex;
     }
 }
 
-.rotate-box, .rotate-card {
-    max-width: 320px;
-    background: rgba(4, 10, 20, 0.92);
-    border: 1px solid var(--cyan);
-    padding: 22px;
-    border-radius: 6px;
-    box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-}
-
-.rotate-icon {
-    font-size: 2.8rem;
-    color: var(--cyan);
-    margin-bottom: 10px;
-    animation: pulseRotate 2s infinite ease-in-out;
-}
-
 @keyframes pulseRotate {
-    0%, 100% { transform: rotate(0deg); opacity: 0.65; }
+    0%, 100% { transform: rotate(0deg); opacity: 0.75; }
     50% { transform: rotate(-90deg); opacity: 1; }
 }
 
@@ -237,7 +234,7 @@ html, body {
     pointer-events: none;
 }
 
-/* --- 5. TOP STATUS BAR (Supports all class aliases) --- */
+/* --- 5. TOP STATUS BAR --- */
 .top-bar, .top-status-bar, #top-bar, header {
     position: relative;
     height: 36px;
@@ -310,7 +307,7 @@ html, body {
     margin-left: 3px;
 }
 
-/* --- 6. WORKSPACE STAGE (LEFT DOCK + CENTER HOLO + RIGHT HUD) --- */
+/* --- 6. WORKSPACE STAGE --- */
 .workspace-grid, .desktop-grid, .cockpit-grid, .desktop-stage, main {
     flex: 1;
     position: relative;
@@ -328,7 +325,6 @@ html, body {
     pointer-events: auto;
 }
 
-/* Left Icon Dock */
 .icon-dock {
     width: 84px;
     display: flex;
@@ -527,7 +523,6 @@ html, body {
     word-break: break-word;
 }
 
-/* Kernel Spiking Substrate Box inside Telemetry */
 #substrate-live-box {
     margin-top: 8px;
     padding-top: 6px;
@@ -591,10 +586,6 @@ html, body {
     flex-shrink: 0;
 }
 
-.win-header:active {
-    cursor: grabbing;
-}
-
 .win-title {
     font-family: 'Orbitron', sans-serif;
     font-size: 0.65rem;
@@ -625,7 +616,6 @@ html, body {
     justify-content: center;
     cursor: pointer;
     border-radius: 3px;
-    transition: all 0.15s ease;
 }
 
 .win-btn:hover {
@@ -709,7 +699,6 @@ html, body {
     padding: 0 10px;
     z-index: 750;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
 }
 
 .chrono-tag {
@@ -753,11 +742,6 @@ html, body {
     border-radius: 2px;
 }
 
-.chrono-btn:hover {
-    background: var(--cyan);
-    color: #000;
-}
-
 .chrono-warp-active {
     animation: quantumFlash 0.35s ease-out;
 }
@@ -780,7 +764,6 @@ html, body {
     align-items: center;
     padding: 0 14px;
     z-index: 800;
-    backdrop-filter: blur(10px);
 }
 
 #taskbar-tabs, .taskbar-tabs {
@@ -798,7 +781,6 @@ html, body {
     font-size: 0.62rem;
     cursor: pointer;
     border-radius: 3px;
-    letter-spacing: 0.8px;
 }
 
 .task-tab.active {
@@ -808,13 +790,7 @@ html, body {
     box-shadow: 0 0 10px var(--cyan);
 }
 
-.taskbar-right, .sys-footer-tag {
-    font-size: 0.64rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-}
-
-/* --- 10. AERO-TOUCH WEBCAM HUD & OPTICAL CURSOR --- */
+/* --- 10. AERO-TOUCH WEBCAM HUD & CURSOR --- */
 #cam-hud, .cam-hud {
     position: fixed;
     bottom: 44px;
@@ -826,7 +802,6 @@ html, body {
     border-radius: 5px;
     z-index: 850;
     overflow: hidden;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
 }
 
 #webcam-video {
@@ -840,17 +815,6 @@ html, body {
     display: block;
 }
 
-.cam-label, .cam-overlay-label {
-    position: absolute;
-    bottom: 3px;
-    left: 5px;
-    font-size: 0.52rem;
-    color: var(--green);
-    background: rgba(0, 0, 0, 0.7);
-    padding: 1px 4px;
-    font-family: 'Orbitron', sans-serif;
-}
-
 #aero-cursor {
     position: fixed;
     width: 24px;
@@ -861,7 +825,6 @@ html, body {
     pointer-events: none;
     z-index: 9999;
     box-shadow: 0 0 14px var(--cyan);
-    transition: width 0.08s, height 0.08s, background 0.08s;
 }
 
 #aero-cursor.pinching {
@@ -869,7 +832,6 @@ html, body {
     height: 14px;
     background: var(--green);
     border-color: #ffffff;
-    box-shadow: 0 0 22px var(--green);
 }
 
 #cursor-state {
@@ -882,58 +844,34 @@ html, body {
     color: var(--green);
     background: rgba(2, 5, 10, 0.85);
     padding: 1px 4px;
-    border-radius: 2px;
     white-space: nowrap;
 }
 
-/* --- 11. MOBILE LANDSCAPE COMPACT SCALING (FITS PHONE WIDESCREEN PERFECTLY) --- */
+/* --- 11. MOBILE LANDSCAPE SCALING --- */
 @media screen and (max-height: 520px) {
-    .top-bar, .top-status-bar, #top-bar, header {
-        height: 30px;
-        padding: 0 10px;
-    }
-    .workspace-grid, .desktop-grid, .cockpit-grid, .desktop-stage, main {
-        padding: 6px 10px;
-        gap: 8px;
-    }
-    .icon-dock {
-        width: 68px;
-        gap: 6px;
-    }
-    .desk-icon {
-        width: 64px;
-        height: 48px;
-        padding: 2px;
-    }
-    .svg-cyber-icon {
-        width: 18px;
-        height: 18px;
-    }
-    .desk-icon span {
-        font-size: 0.5rem;
-    }
-    .telemetry-hud {
-        width: 175px;
-    }
-    .hud-card {
-        padding: 6px 8px;
-        font-size: 0.6rem;
-    }
-    #window-layer {
-        top: 30px;
-        bottom: 28px;
-    }
-    .os-window {
-        width: min(520px, calc(100vw - 88px));
-        height: calc(100vh - 70px);
-    }
-    #chrono-dock {
-        left: 80px;
-        right: 188px;
-        bottom: 31px;
-        height: 24px;
-    }
-    .taskbar, .bottom-taskbar, #taskbar, footer {
-        height: 28px;
-    }
+    .top-bar, .top-status-bar, #top-bar, header { height: 30px; padding: 0 10px; }
+    .workspace-grid, .desktop-grid, .cockpit-grid, .desktop-stage, main { padding: 6px 10px; gap: 8px; }
+    .icon-dock { width: 68px; gap: 6px; }
+    .desk-icon { width: 64px; height: 48px; padding: 2px; }
+    .svg-cyber-icon { width: 18px; height: 18px; }
+    .desk-icon span { font-size: 0.5rem; }
+    .telemetry-hud { width: 175px; }
+    .hud-card { padding: 6px 8px; font-size: 0.6rem; }
+    #window-layer { top: 30px; bottom: 28px; }
+    .os-window { width: min(520px, calc(100vw - 88px)); height: calc(100vh - 70px); }
+    #chrono-dock { left: 80px; right: 188px; bottom: 31px; height: 24px; }
+    .taskbar, .bottom-taskbar, #taskbar, footer { height: 28px; }
+}
+
+/* --- 12. MASTER HIDDEN OVERRIDE (PLACED AT VERY END SO IT ALWAYS WINS) --- */
+.hidden,
+#rotate-guard.hidden,
+#boot-screen.hidden,
+#desktop.hidden,
+#cam-hud.hidden,
+#aero-cursor.hidden,
+#boot-start-btn.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
