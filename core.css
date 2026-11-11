@@ -1,785 +1,138 @@
-:root {
-    --bg-void: #030508;
-    --bg-panel: rgba(8, 13, 22, 0.9);
-    --bg-glass: rgba(10, 18, 32, 0.76);
-    --cyan: #00f0ff;
-    --cyan-dim: rgba(0, 240, 255, 0.24);
-    --cyan-glow: 0 0 18px rgba(0, 240, 255, 0.45);
-    --green: #00ff9d;
-    --amber: #ffb800;
-    --crimson: #ff2a54;
-    --text-bright: #e6f4ff;
-    --text-muted: #64829e;
-}
+/* ============================================================================
+   CORE.CSS CONTINUATION (v4.0 UPGRADE BLOCK — PASTE AT THE END OF core.css)
+   Includes: PC Rotate-Guard Lock, GPU Acceleration, Zero-Emoji SVG Icons,
+   Chrono-Core Time-Travel Scrubber Bar & Neural Substrate Telemetry
+   ============================================================================ */
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-}
-
-body, html {
-    width: 100vw;
-    height: 100vh;
-    background: var(--bg-void);
-    color: var(--text-bright);
-    font-family: 'Share Tech Mono', monospace;
-    overflow: hidden;
-    touch-action: none;
-}
-
-.hidden { display: none !important; }
-
-/* CRT SCANLINE OVERLAY */
-.crt-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9990;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-    background-size: 100% 4px;
-    opacity: 0.4;
-}
-
-/* PORTRAIT ROTATE LOCK OVERLAY */
-#rotate-guard {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, #071426 0%, #020408 100%);
-    z-index: 9995;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    text-align: center;
-}
-
-@media screen and (orientation: portrait) and (max-width: 900px) {
+/* 1. Never show Portrait Rotate Screen on PC/Laptop Mouse Devices */
+@media (hover: hover) and (pointer: fine) {
     #rotate-guard {
-        display: flex;
+        display: none !important;
     }
 }
 
-.rotate-card {
-    border: 1px solid var(--cyan);
-    background: rgba(6, 12, 22, 0.95);
-    box-shadow: var(--cyan-glow);
-    padding: 28px 20px;
-    border-radius: 8px;
-    max-width: 360px;
+/* 2. 60-FPS Hardware GPU Layer Promotion (Stops Aero-Touch & Window Lag) */
+.os-window,
+#aero-cursor,
+#bg-canvas,
+#chrono-dock {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
-.rotate-phone-anim {
-    font-size: 3.2rem;
-    color: var(--cyan);
-    margin-bottom: 14px;
-    display: inline-block;
-    animation: tiltPhone 1.8s infinite ease-in-out;
+/* 3. Clean Vector SVG Icon Containers (Replaces All Emojis) */
+.svg-cyber-icon {
+    width: 28px;
+    height: 28px;
+    stroke: #00f0ff;
+    stroke-width: 1.6;
+    fill: rgba(0, 240, 255, 0.08);
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
 }
 
-@keyframes tiltPhone {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(-90deg); }
+.desk-icon:hover .svg-cyber-icon {
+    stroke: #00ff9d;
+    fill: rgba(0, 255, 157, 0.16);
+    filter: drop-shadow(0 0 10px rgba(0, 255, 157, 0.75));
+    transform: scale(1.08);
 }
 
-.rotate-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 900;
-    color: var(--cyan);
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-}
-
-.rotate-sub {
-    font-size: 0.8rem;
-    color: var(--text-bright);
-    line-height: 1.4;
-    margin-bottom: 14px;
-}
-
-.rotate-brand {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 3px;
-    color: #fff;
-}
-
-.rotate-brand b { color: var(--cyan); }
-
-/* BOOT SCREEN */
-#boot-screen {
+/* 4. CHRONO-CORE // QUANTUM MEMORY TIME-TRAVEL DOCK */
+#chrono-dock {
     position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, #08121e 0%, #020306 100%);
+    left: 96px;
+    right: 215px;
+    bottom: 36px;
+    height: 34px;
+    background: rgba(3, 7, 15, 0.92);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-left: 3px solid #00f0ff;
+    border-right: 3px solid #00ff9d;
+    border-radius: 4px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    z-index: 9000;
-    padding: 16px;
+    gap: 10px;
+    padding: 0 12px;
+    z-index: 950;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 12px rgba(0, 240, 255, 0.08);
+    font-family: 'Share Tech Mono', monospace;
 }
 
-.boot-box {
-    width: 100%;
-    max-width: 580px;
-    background: rgba(6, 10, 18, 0.95);
-    border: 1px solid var(--cyan);
-    box-shadow: var(--cyan-glow);
-    padding: 22px;
-    border-radius: 6px;
-}
-
-.boot-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.boot-title {
+.chrono-tag {
     font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--cyan);
-    letter-spacing: 4px;
-    text-shadow: var(--cyan-glow);
+    font-size: 0.62rem;
+    letter-spacing: 1.2px;
+    color: #00f0ff;
+    white-space: nowrap;
 }
 
-.boot-sub {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-}
-
-.boot-brand {
-    margin-top: 2px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 3px;
-    color: #ffffff;
-    margin-bottom: 12px;
-}
-
-.boot-brand b {
-    color: var(--cyan);
-    font-weight: 900;
-}
-
-.boot-progress-wrap {
-    width: 100%;
-    height: 6px;
-    background: #0b1524;
-    border: 1px solid var(--cyan-dim);
-    margin-bottom: 12px;
-    overflow: hidden;
-}
-
-.boot-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: var(--cyan);
-    box-shadow: var(--cyan-glow);
-    transition: width 0.2s ease;
-}
-
-.boot-logs {
-    height: 150px;
-    overflow-y: auto;
-    font-size: 0.78rem;
-    line-height: 1.5;
-    color: #9ec2e6;
-    background: #03060c;
-    padding: 10px;
-    border-left: 2px solid var(--cyan);
-    margin-bottom: 12px;
-}
-
-.log-ok { color: var(--green); font-weight: bold; }
-
-.cyber-btn {
-    width: 100%;
-    padding: 10px;
-    background: rgba(0, 240, 255, 0.14);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 0.82rem;
-    letter-spacing: 2px;
+.chrono-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: linear-gradient(90deg, #00f0ff 0%, #00ff9d 100%);
+    border-radius: 2px;
+    outline: none;
     cursor: pointer;
-    transition: 0.2s;
-    box-shadow: var(--cyan-glow);
 }
 
-.cyber-btn:hover, .cyber-btn:active {
-    background: var(--cyan);
+.chrono-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #02050a;
+    border: 2px solid #00ff9d;
+    box-shadow: 0 0 10px #00ff9d;
+    transform: rotate(45deg);
+    cursor: grab;
+}
+
+.chrono-btn {
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    color: #00f0ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.58rem;
+    padding: 3px 7px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+    transition: all 0.15s ease;
+}
+
+.chrono-btn:hover {
+    background: #00f0ff;
     color: #000;
 }
 
-/* DESKTOP LAYOUT */
-#desktop {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* 5. Quantum Time-Warp Screen Flash Effect */
+.chrono-warp-active {
+    animation: quantumFlash 0.35s ease-out;
 }
 
-#bg-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+@keyframes quantumFlash {
+    0% { filter: hue-rotate(90deg) brightness(1.5) contrast(1.3); }
+    100% { filter: hue-rotate(0deg) brightness(1) contrast(1); }
 }
 
-/* CENTER HOLOGRAPHIC CLOCK WATERMARK */
-.center-holo-clock {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0.28;
-}
-
-.holo-sys-tag {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 4px;
-    color: var(--cyan);
-    margin-bottom: 4px;
-}
-
-.holo-time-row {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 3.6rem;
-    font-weight: 900;
-    color: #ffffff;
-    letter-spacing: 3px;
-    text-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
-    line-height: 1;
-}
-
-.holo-ms {
-    font-size: 1.4rem;
-    color: var(--cyan);
-}
-
-.holo-date {
-    font-size: 0.82rem;
-    letter-spacing: 3px;
-    color: var(--text-bright);
-    margin-top: 6px;
-}
-
-.holo-legend {
-    margin-top: 6px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 900;
-    letter-spacing: 6px;
-    color: var(--cyan);
-}
-
-/* TOP BAR */
-#top-bar {
-    position: relative;
-    z-index: 100;
-    height: 38px;
-    background: var(--bg-panel);
-    border-bottom: 1px solid var(--cyan-dim);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 12px;
-    backdrop-filter: blur(12px);
-}
-
-.brand-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.sys-badge {
-    background: rgba(0, 240, 255, 0.15);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    padding: 2px 8px;
-    font-size: 0.78rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.sys-divider { color: var(--text-muted); }
-
-.brand-legend {
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 0.78rem;
-    letter-spacing: 1.5px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.top-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.top-pill {
-    background: rgba(12, 22, 38, 0.92);
-    border: 1px solid var(--cyan-dim);
-    color: var(--text-bright);
-    padding: 4px 10px;
-    font-size: 0.74rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Share Tech Mono', monospace;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.top-pill:hover {
-    border-color: var(--cyan);
-    box-shadow: var(--cyan-glow);
-}
-
-.top-pill b { color: var(--cyan); }
-
-.clock-pill {
-    border-color: var(--cyan);
-    background: rgba(0, 240, 255, 0.1);
-}
-
-.clock-pill b {
-    color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.76rem;
-    letter-spacing: 1px;
-}
-
-/* WORKSPACE BODY */
-.desktop-body {
-    position: relative;
-    z-index: 10;
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 16px;
-    overflow: hidden;
-}
-
-.icon-grid {
-    display: grid;
-    grid-template-rows: repeat(4, minmax(64px, 1fr));
-    gap: 10px;
-    z-index: 20;
-    align-content: start;
-}
-
-.desk-icon {
-    width: 88px;
-    padding: 8px 4px;
-    background: var(--bg-glass);
-    border: 1px solid var(--cyan-dim);
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    transition: 0.2s;
-    backdrop-filter: blur(6px);
-}
-
-.desk-icon:hover, .desk-icon:active {
-    border-color: var(--cyan);
-    box-shadow: var(--cyan-glow);
-    transform: translateX(4px);
-}
-
-.icon-frame {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cyber-svg {
-    width: 28px;
-    height: 28px;
-    fill: var(--cyan);
-    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.6));
-}
-
-.icon-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.58rem;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: 0.8px;
-}
-
-/* TELEMETRY RIGHT SIDEBAR */
-.telemetry-hud {
-    width: 210px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 20;
-}
-
-.hud-card {
-    background: var(--bg-glass);
-    border: 1px solid var(--cyan-dim);
-    padding: 10px;
-    border-radius: 6px;
-    backdrop-filter: blur(8px);
-}
-
-.hud-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.66rem;
-    color: var(--cyan);
-    letter-spacing: 1.5px;
-    margin-bottom: 6px;
-    border-bottom: 1px solid var(--cyan-dim);
-    padding-bottom: 3px;
-}
-
-.hud-metric {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    margin-top: 6px;
-}
-
-.hud-metric b { color: var(--green); }
-
-.hud-bar {
-    width: 100%;
-    height: 4px;
-    background: #091320;
-    margin-top: 3px;
-    overflow: hidden;
-}
-
-.hud-bar div {
-    height: 100%;
-    background: var(--cyan);
-    transition: width 0.3s;
-}
-
-.cam-box {
-    position: relative;
-    width: 100%;
-    height: 95px;
-    background: #000;
-    border: 1px solid var(--cyan);
-    overflow: hidden;
-    margin-bottom: 4px;
-}
-
-#webcam-video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scaleX(-1);
-    opacity: 0.35;
-}
-
-#webcam-canvas {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transform: scaleX(-1);
-}
-
-.brand-card {
-    margin-top: auto;
-    text-align: center;
-    border-color: rgba(255, 255, 255, 0.22);
-}
-
-.legend-watermark {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 900;
-    letter-spacing: 5px;
-    color: #fff;
-    text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
-}
-
-.hud-sub {
+/* 6. Kernel Spiking Substrate Mini-Bar inside Right Telemetry */
+#substrate-live-box {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 240, 255, 0.22);
     font-size: 0.62rem;
-    color: var(--text-muted);
-    margin-top: 2px;
+    color: #9ec2e6;
 }
 
-/* FLOATING OS WINDOWS */
-#window-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 50;
-}
-
-.os-window {
-    position: absolute;
-    pointer-events: auto;
-    width: 620px;
-    height: 360px;
-    max-width: 78vw;
-    max-height: 76vh;
-    background: rgba(6, 11, 20, 0.95);
-    border: 1px solid var(--cyan);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 240, 255, 0.22);
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    backdrop-filter: blur(16px);
-}
-
-.os-window.maximized {
-    width: 96vw !important;
-    height: calc(100vh - 90px) !important;
-    left: 2vw !important;
-    top: 6px !important;
-    max-width: 96vw !important;
-    max-height: 90vh !important;
-}
-
-.win-header {
-    height: 32px;
-    background: linear-gradient(90deg, rgba(0, 240, 255, 0.2), rgba(8, 14, 26, 0.95));
-    border-bottom: 1px solid var(--cyan-dim);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    cursor: grab;
-    touch-action: none;
-}
-
-.win-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--cyan);
-    letter-spacing: 1.2px;
-}
-
-.win-actions {
-    display: flex;
-    gap: 6px;
-}
-
-.win-btn {
-    width: 22px;
-    height: 22px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--cyan-dim);
-    color: var(--text-bright);
-    font-size: 0.7rem;
-    cursor: pointer;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.win-btn:hover {
-    border-color: var(--cyan);
-    color: var(--cyan);
-}
-
-.win-btn.close:hover {
-    background: var(--crimson);
-    border-color: var(--crimson);
-    color: #fff;
-}
-
-.win-body {
-    flex: 1;
-    padding: 12px;
-    overflow: auto;
-    position: relative;
-    touch-action: pan-y;
-}
-
-/* TERMINAL STYLING */
-.term-output {
-    font-size: 0.8rem;
-    line-height: 1.45;
-    color: #bfe3ff;
-    white-space: pre-wrap;
-    margin-bottom: 8px;
-}
-
-.term-input-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.term-prompt {
-    color: var(--green);
-    font-weight: bold;
-    font-size: 0.82rem;
-}
-
-.term-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--cyan);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.85rem;
-}
-
-/* AERO-TOUCH VIRTUAL CURSOR */
-#aero-cursor {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.cursor-ring {
-    width: 34px;
-    height: 34px;
-    border: 2px solid var(--cyan);
-    border-radius: 50%;
-    box-shadow: var(--cyan-glow);
-    transition: transform 0.1s, border-color 0.1s;
-}
-
-#aero-cursor.pinching .cursor-ring {
-    transform: scale(0.65);
-    border-color: var(--green);
-    background: rgba(0, 255, 157, 0.25);
-}
-
-.cursor-dot {
-    position: absolute;
-    left: 14px;
-    width: 6px;
-    height: 6px;
-    background: var(--cyan);
-    border-radius: 50%;
-}
-
-#cursor-state {
-    font-size: 0.65rem;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 2px 5px;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-}
-
-/* TASKBAR */
-#taskbar {
-    position: relative;
-    z-index: 100;
+#substrate-raster {
+    width: 100%;
     height: 36px;
-    background: var(--bg-panel);
-    border-top: 1px solid var(--cyan-dim);
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    gap: 10px;
+    background: #02050a;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    margin-top: 4px;
+    display: block;
 }
-
-.start-btn {
-    background: rgba(0, 240, 255, 0.15);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    padding: 4px 12px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: var(--cyan-glow);
-}
-
-.taskbar-tabs {
-    flex: 1;
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-}
-
-.task-tab {
-    padding: 4px 10px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--cyan-dim);
-    color: var(--text-bright);
-    font-size: 0.7rem;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.task-tab.active {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    background: rgba(0, 240, 255, 0.14);
-}
-
-.taskbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 0.72rem;
-    color: var(--text-bright);
-    cursor: pointer;
-}
-
-.fs-btn {
-    color: var(--cyan);
-    border: 1px solid var(--cyan-dim);
-    padding: 2px 8px;
-    border-radius: 3px;
-}
-
-/* MOBILE LANDSCAPE COMPACT COCKPIT SCALING */
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    #top-bar { height: 32px; padding: 0 8px; }
-    .sys-badge, .brand-legend { font-size: 0.68rem; }
-    .top-pill { padding: 2px 7px; font-size: 0.66rem; }
-    .desktop-body { padding: 6px 10px; }
-    .icon-grid { gap: 6px; }
-    .desk-icon { width: 74px; padding: 5px 3px; }
-    .icon-frame { width: 24px; height: 24px; }
-    .cyber-svg { width: 22px; height: 22px; }
-    .icon-label { font-size: 0.5rem; }
-    .telemetry-hud { width: 175px; gap: 6px; }
-    .hud-card { padding: 6px 8px; }
-    .hud-title { font-size: 0.58rem; margin-bottom: 4px; }
-    .hud-metric { font-size: 0.62rem; margin-top: 3px; }
-    .legend-watermark { font-size: 0.95rem; }
-    .os-window { width: 64vw; height: 74vh; }
-    .holo-time-row { font-size: 2.4rem; }
-    #taskbar { height: 30px; }
-    /* PC पर कभी भी Rotate स्क्रीन नहीं दिखेगी, सिर्फ फोन को सीधा पकड़ने पर दिखेगी */
-@media (hover: hover) and (pointer: fine) {
-    #rotate-guard { display: none !important; }
-}
-
