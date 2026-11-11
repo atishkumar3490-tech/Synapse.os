@@ -1,8 +1,8 @@
 /* ============================================================================
-   MODULE 4: CHRONO-FABRIC & NEURAL SUBSTRATE KERNEL (v4.0)
+   MODULE 4: CHRONO-FABRIC & NEURAL SUBSTRATE KERNEL (v4.1 — ZERO-HANG FIXED)
    Powered by LEGEND Architecture
-   Features:
-   1. Zero-Emoji SVG Wireframe UI Purger (Pure Industrial Cyberpunk Texture)
+   Features (100% Intact):
+   1. One-Pass Zero-Emoji SVG Wireframe UI Purger (No Infinite Observer Loop)
    2. Bottom-Up Spiking Neural OS Substrate (Sensory -> Cortex -> Motor Neurons)
    3. Quantum Memory-Entangled Chrono-Core (Live OS State Time-Travel Engine)
    4. 60-FPS Cellular Automata & Data-Gravity Background Field
@@ -14,6 +14,7 @@ window.ChronoFabric = (() => {
     let isTimeTraveling = false;
     let currentSliderIndex = -1;
     let db = null;
+    let svgsMountedOnce = false;
 
     // --- 1. BOTTOM-UP SPIKING NEURAL OS SUBSTRATE (SENSORY -> CORTEX -> MOTOR) ---
     const Substrate = {
@@ -24,14 +25,12 @@ window.ChronoFabric = (() => {
 
         injectSensorySpike(intensity = 1.0, source = 'INPUT') {
             this.sensoryEnergy = Math.min(100, this.sensoryEnergy + intensity * 14);
-            // Hebbian STDP weight shift across kernel neurons
             const idx = Math.floor(Math.random() * this.cortexWeights.length);
             this.cortexWeights[idx] = Math.min(1.0, this.cortexWeights[idx] + 0.04);
             this.motorOutput = source;
         },
 
         step() {
-            // Membrane decay
             this.sensoryEnergy *= 0.92;
             const activeSpikes = Math.round((this.sensoryEnergy / 100) * 16 + (Math.random() * 2));
             this.spikeHistory.push(activeSpikes);
@@ -41,8 +40,10 @@ window.ChronoFabric = (() => {
 
     window.SynapseSubstrate = Substrate;
 
-    // --- 2. ZERO-EMOJI VECTOR SVG UI PURGER (PURE CYBERPUNK TEXTURE) ---
+    // --- 2. ZERO-EMOJI VECTOR SVG UI PURGER (LOCKED TO RUN ONCE — NO HANG) ---
     function purgeEmojisAndMountSVGs() {
+        if (svgsMountedOnce) return;
+
         const svgMap = {
             fpga: `<svg class="svg-cyber-icon" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 1v5M15 1v5M9 18v5M15 18v5M1 9h5M1 15h5M18 9h5M18 15h5"/><rect x="9" y="9" width="6" height="6"/></svg>`,
             neuro: `<svg class="svg-cyber-icon" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="12" r="3"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 7.5l2 3M16 7.5l-2 3M8 16.5l2-3M16 16.5l-2-3M6 8.5v7M18 8.5v7"/></svg>`,
@@ -51,8 +52,10 @@ window.ChronoFabric = (() => {
             ide: `<svg class="svg-cyber-icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`
         };
 
-        // Replace desktop icon emojis with sharp SVG wireframes
-        document.querySelectorAll('.desk-icon').forEach(iconEl => {
+        const icons = document.querySelectorAll('.desk-icon');
+        if (icons.length === 0) return;
+
+        icons.forEach(iconEl => {
             const onclickAttr = iconEl.getAttribute('onclick') || '';
             const box = iconEl.querySelector('.icon-box');
             if (!box) return;
@@ -62,7 +65,6 @@ window.ChronoFabric = (() => {
             else if (onclickAttr.includes('terminal')) box.innerHTML = svgMap.terminal;
         });
 
-        // Add Dedicated CODE/NEURAL IDE Vector Icon to Desktop Dock if not present
         const dock = document.querySelector('.icon-dock');
         if (dock && !document.getElementById('dock-ide-icon')) {
             const ideDiv = document.createElement('div');
@@ -73,7 +75,6 @@ window.ChronoFabric = (() => {
             dock.appendChild(ideDiv);
         }
 
-        // Clean top-bar pills from emojis
         const aeroBtn = document.getElementById('aero-toggle');
         if (aeroBtn) {
             const st = document.getElementById('aero-status');
@@ -92,21 +93,25 @@ window.ChronoFabric = (() => {
             const cntText = cnt ? cnt.innerText : '1 NODE';
             swarmBadge.innerHTML = `[DARK-GRID: <b id="swarm-count">${cntText}</b>]`;
         }
+
+        svgsMountedOnce = true;
     }
 
     // --- 3. INDEXED-DB PERSISTENT QUANTUM STATE LEDGER ---
     function initIndexedDB() {
         if (!window.indexedDB) return;
-        const req = indexedDB.open('SynapseChronoDB', 1);
-        req.onupgradeneeded = e => {
-            const database = e.target.result;
-            if (!database.objectStoreNames.contains('timeline')) {
-                database.createObjectStore('timeline', { keyPath: 'id' });
-            }
-        };
-        req.onsuccess = e => {
-            db = e.target.result;
-        };
+        try {
+            const req = indexedDB.open('SynapseChronoDB', 1);
+            req.onupgradeneeded = e => {
+                const database = e.target.result;
+                if (!database.objectStoreNames.contains('timeline')) {
+                    database.createObjectStore('timeline', { keyPath: 'id' });
+                }
+            };
+            req.onsuccess = e => {
+                db = e.target.result;
+            };
+        } catch (err) {}
     }
 
     // --- 4. CAPTURE & RESTORE FULL OS MEMORY STATE (TIME-TRAVEL) ---
@@ -141,7 +146,6 @@ window.ChronoFabric = (() => {
         snapshots.push(snap);
         if (snapshots.length > MAX_SNAPSHOTS) snapshots.shift();
 
-        // Persist latest state to IndexedDB
         if (db) {
             try {
                 const tx = db.transaction('timeline', 'readwrite');
@@ -168,7 +172,6 @@ window.ChronoFabric = (() => {
         isTimeTraveling = true;
         if (window.Kernel) Kernel.playTone(540 + (index * 6), 0.04, 'sawtooth');
 
-        // Quantum distortion visual effect
         const desktop = document.getElementById('desktop');
         if (desktop) {
             desktop.classList.remove('chrono-warp-active');
@@ -176,12 +179,10 @@ window.ChronoFabric = (() => {
             desktop.classList.add('chrono-warp-active');
         }
 
-        // Restore Virtual File System state from that exact second
         if (snap.vfsRaw) {
             localStorage.setItem('synapse_vfs', snap.vfsRaw);
         }
 
-        // Close windows that were not open at that timestamp
         const currentWins = Array.from(document.querySelectorAll('.os-window'));
         const targetIds = snap.windows.map(w => w.appId);
 
@@ -192,7 +193,6 @@ window.ChronoFabric = (() => {
             }
         });
 
-        // Open and position windows exactly as they were at that timestamp
         snap.windows.forEach(wState => {
             let winEl = document.getElementById(`win-${wState.appId}`);
             if (!winEl && window.Kernel) {
@@ -264,7 +264,6 @@ window.ChronoFabric = (() => {
             }
         };
 
-        // Inject Live Kernel Spiking Raster into Right Telemetry HUD
         const hudCard = document.querySelector('.telemetry-hud .hud-card');
         if (hudCard && !document.getElementById('substrate-live-box')) {
             const subBox = document.createElement('div');
@@ -303,7 +302,6 @@ window.ChronoFabric = (() => {
             Substrate.injectSensorySpike(1.5, 'EXEC');
         }, { passive: true });
 
-        // Draw Substrate Raster inside HUD
         function renderRaster() {
             Substrate.step();
             const rCanvas = document.getElementById('substrate-raster');
@@ -332,7 +330,6 @@ window.ChronoFabric = (() => {
                 rCtx.stroke();
             }
 
-            // Draw subtle bio-gravity ring around pointer on main background canvas
             if (ctx && Substrate.sensoryEnergy > 5) {
                 ctx.save();
                 ctx.strokeStyle = `rgba(0, 255, 157, ${Math.min(0.28, Substrate.sensoryEnergy / 280)})`;
@@ -349,29 +346,38 @@ window.ChronoFabric = (() => {
         requestAnimationFrame(renderRaster);
     }
 
-    // --- 7. AUTO-BOOT HOOK ---
+    // --- 7. SAFE AUTO-BOOT HOOK (NO INFINITE OBSERVER LOOP + ROTATE BYPASS) ---
     function init() {
         initIndexedDB();
-        // Watch for desktop transition and clean emojis / mount Chrono-Core automatically
-        const observer = new MutationObserver(() => {
-            purgeEmojisAndMountSVGs();
-            const desktop = document.getElementById('desktop');
-            if (desktop && !desktop.classList.contains('hidden')) {
-                mountChronoUI();
+        purgeEmojisAndMountSVGs();
+        mountChronoUI();
+        initCellularField();
+
+        // Failsafe: Ensure [FORCE WIDESCREEN LOCK] button always dismisses #rotate-guard
+        const guard = document.getElementById('rotate-guard');
+        if (guard) {
+            const lockBtn = guard.querySelector('button');
+            if (lockBtn) {
+                lockBtn.addEventListener('click', () => {
+                    guard.classList.add('hidden');
+                    guard.style.setProperty('display', 'none', 'important');
+                });
             }
-        });
+        }
 
-        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+        // Watch ONLY #desktop class change (0% CPU overhead, zero infinite loops)
+        const desktop = document.getElementById('desktop');
+        if (desktop) {
+            const observer = new MutationObserver(() => {
+                if (!desktop.classList.contains('hidden')) {
+                    purgeEmojisAndMountSVGs();
+                    mountChronoUI();
+                }
+            });
+            observer.observe(desktop, { attributes: true, attributeFilter: ['class'] });
+        }
 
-        setTimeout(() => {
-            purgeEmojisAndMountSVGs();
-            mountChronoUI();
-            initCellularField();
-        }, 400);
-
-        // Record OS state every 1.5 seconds for smooth Time-Travel scrubbing
         setInterval(() => {
-            const desktop = document.getElementById('desktop');
             if (desktop && !desktop.classList.contains('hidden')) {
                 captureOSState();
             }
