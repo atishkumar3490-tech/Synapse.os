@@ -1,0 +1,604 @@
+:root {
+    --bg-void: #030508;
+    --bg-panel: rgba(8, 13, 22, 0.88);
+    --bg-glass: rgba(12, 20, 34, 0.72);
+    --cyan: #00f0ff;
+    --cyan-dim: rgba(0, 240, 255, 0.22);
+    --cyan-glow: 0 0 18px rgba(0, 240, 255, 0.45);
+    --green: #00ff9d;
+    --amber: #ffb800;
+    --crimson: #ff2a54;
+    --text-bright: #e6f4ff;
+    --text-muted: #64829e;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body, html {
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-void);
+    color: var(--text-bright);
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+/* CRT SCANLINE OVERLAY */
+.crt-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9990;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    opacity: 0.45;
+}
+
+/* BOOT SCREEN */
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, #08121e 0%, #020306 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9000;
+    padding: 20px;
+}
+
+.boot-box {
+    width: 100%;
+    max-width: 580px;
+    background: rgba(6, 10, 18, 0.95);
+    border: 1px solid var(--cyan);
+    box-shadow: var(--cyan-glow);
+    padding: 28px;
+    border-radius: 6px;
+}
+
+.boot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.boot-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    text-shadow: var(--cyan-glow);
+}
+
+.boot-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.boot-brand {
+    margin-top: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    color: #ffffff;
+    margin-bottom: 18px;
+}
+
+.boot-brand b {
+    color: var(--cyan);
+    font-weight: 900;
+}
+
+.boot-progress-wrap {
+    width: 100%;
+    height: 6px;
+    background: #0b1524;
+    border: 1px solid var(--cyan-dim);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.boot-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--cyan);
+    box-shadow: var(--cyan-glow);
+    transition: width 0.2s ease;
+}
+
+.boot-logs {
+    height: 210px;
+    overflow-y: auto;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #9ec2e6;
+    background: #03060c;
+    padding: 12px;
+    border-left: 2px solid var(--cyan);
+    margin-bottom: 16px;
+}
+
+.log-ok { color: var(--green); font-weight: bold; }
+.log-warn { color: var(--amber); }
+
+.cyber-btn {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: var(--cyan-glow);
+}
+
+.cyber-btn:hover {
+    background: var(--cyan);
+    color: #000;
+}
+
+/* DESKTOP LAYOUT */
+#desktop {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#bg-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#top-bar {
+    position: relative;
+    z-index: 100;
+    height: 44px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--cyan-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    backdrop-filter: blur(12px);
+}
+
+.brand-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.sys-badge {
+    background: rgba(0, 240, 255, 0.15);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 3px 10px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.sys-divider { color: var(--text-muted); }
+
+.brand-legend {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-pill {
+    background: rgba(12, 22, 38, 0.9);
+    border: 1px solid var(--cyan-dim);
+    color: var(--text-bright);
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.top-pill:hover {
+    border-color: var(--cyan);
+    box-shadow: var(--cyan-glow);
+}
+
+.top-pill b { color: var(--cyan); }
+
+/* WORKSPACE BODY */
+.desktop-body {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.icon-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    z-index: 20;
+}
+
+.desk-icon {
+    width: 96px;
+    padding: 10px 6px;
+    background: var(--bg-glass);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    backdrop-filter: blur(6px);
+}
+
+.desk-icon:hover {
+    border-color: var(--cyan);
+    box-shadow: var(--cyan-glow);
+    transform: translateX(4px);
+}
+
+.icon-frame {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cyber-svg {
+    width: 34px;
+    height: 34px;
+    fill: var(--cyan);
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.6));
+}
+
+.icon-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* TELEMETRY RIGHT SIDEBAR */
+.telemetry-hud {
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 20;
+}
+
+.hud-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--cyan-dim);
+    padding: 12px;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+}
+
+.hud-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    color: var(--cyan);
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--cyan-dim);
+    padding-bottom: 4px;
+}
+
+.hud-metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-top: 8px;
+}
+
+.hud-metric b { color: var(--green); }
+
+.hud-bar {
+    width: 100%;
+    height: 4px;
+    background: #091320;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.hud-bar div {
+    height: 100%;
+    background: var(--cyan);
+    transition: width 0.3s;
+}
+
+.cam-box {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    background: #000;
+    border: 1px solid var(--cyan);
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+#webcam-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    opacity: 0.35;
+}
+
+#webcam-canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+}
+
+.brand-card {
+    margin-top: auto;
+    text-align: center;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.legend-watermark {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 5px;
+    color: #fff;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
+
+.hud-sub {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* FLOATING OS WINDOWS */
+#window-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+}
+
+.os-window {
+    position: absolute;
+    pointer-events: auto;
+    width: 680px;
+    height: 440px;
+    max-width: 94vw;
+    max-height: 80vh;
+    background: rgba(6, 11, 20, 0.94);
+    border: 1px solid var(--cyan);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), 0 0 15px rgba(0, 240, 255, 0.2);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(16px);
+}
+
+.win-header {
+    height: 36px;
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.18), rgba(8, 14, 26, 0.95));
+    border-bottom: 1px solid var(--cyan-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    cursor: grab;
+}
+
+.win-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 1.5px;
+}
+
+.win-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.win-btn {
+    width: 22px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--cyan-dim);
+    color: var(--text-bright);
+    font-size: 0.75rem;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.win-btn.close:hover {
+    background: var(--crimson);
+    border-color: var(--crimson);
+    color: #fff;
+}
+
+.win-body {
+    flex: 1;
+    padding: 14px;
+    overflow: auto;
+    position: relative;
+}
+
+/* TERMINAL STYLING */
+.term-output {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #bfe3ff;
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+}
+
+.term-input-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.term-prompt {
+    color: var(--green);
+    font-weight: bold;
+}
+
+.term-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cyan);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+}
+
+/* AERO-TOUCH VIRTUAL CURSOR */
+#aero-cursor {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--cyan);
+    border-radius: 50%;
+    box-shadow: var(--cyan-glow);
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+#aero-cursor.pinching .cursor-ring {
+    transform: scale(0.65);
+    border-color: var(--green);
+    background: rgba(0, 255, 157, 0.25);
+}
+
+.cursor-dot {
+    position: absolute;
+    left: 14px;
+    width: 6px;
+    height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+}
+
+#cursor-state {
+    font-size: 0.65rem;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2px 5px;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+}
+
+/* TASKBAR */
+#taskbar {
+    position: relative;
+    z-index: 100;
+    height: 42px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--cyan-dim);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 10px;
+}
+
+.start-btn {
+    background: rgba(0, 240, 255, 0.15);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 6px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--cyan-glow);
+}
+
+.taskbar-tabs {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.task-tab {
+    padding: 5px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cyan-dim);
+    color: var(--text-bright);
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.task-tab.active {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(0, 240, 255, 0.12);
+}
+
+.taskbar-right {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .telemetry-hud { display: none; }
+    .os-window {
+        width: 95vw !important;
+        height: 74vh !important;
+        left: 2.5vw !important;
+        top: 10px !important;
+    }
+    .brand-legend { font-size: 0.7rem; }
+}
