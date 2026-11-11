@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SYNAPSE // OS — POWERED BY LEGEND</title>
+    <link rel="stylesheet" href="core.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- MediaPipe Hand Tracking CDN (For Aero-Touch Gesture UI) -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <!-- PeerJS CDN (For Local Wi-Fi Multi-Phone Supercluster) -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+    <!-- CRT Scanline & Vignette Overlay -->
+    <div class="crt-overlay"></div>
+
+    <!-- VIRTUAL HAND CURSOR (AERO-TOUCH) -->
+    <div id="aero-cursor" class="hidden">
+        <div class="cursor-ring"></div>
+        <div class="cursor-dot"></div>
+        <span id="cursor-state">TRACKING</span>
+    </div>
+
+    <!-- 1. BIOS BOOT SCREEN -->
+    <div id="boot-screen">
+        <div class="boot-box">
+            <div class="boot-header">
+                <span class="boot-title">SYNAPSE</span>
+                <span class="boot-sub">ARCH-KERNEL v4.9.0-SILICON // x86_64-WASM</span>
+            </div>
+            <div class="boot-brand">POWERED BY <b>LEGEND</b></div>
+            
+            <div class="boot-progress-wrap">
+                <div id="boot-bar" class="boot-progress-bar"></div>
+            </div>
+            
+            <div id="boot-logs" class="boot-logs"></div>
+            
+            <button id="boot-start-btn" class="cyber-btn hidden" onclick="Kernel.enterDesktop()">
+                INITIALIZE NEURAL INTERFACE [ENTER]
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. MAIN DESKTOP ENVIRONMENT -->
+    <div id="desktop" class="hidden">
+        
+        <!-- Background Cyber Grid Canvas -->
+        <canvas id="bg-canvas"></canvas>
+
+        <!-- TOP SYSTEM BAR -->
+        <header id="top-bar">
+            <div class="brand-group">
+                <span class="sys-badge">SYNAPSE</span>
+                <span class="sys-divider">//</span>
+                <span class="brand-legend">POWERED BY LEGEND</span>
+            </div>
+
+            <div class="top-controls">
+                <button id="aero-btn" class="top-pill" onclick="Kernel.toggleAeroTouch()">
+                    🖐️ AERO-TOUCH: <b id="aero-status">OFF</b>
+                </button>
+                <div class="top-pill" id="cluster-pill" onclick="Kernel.openApp('swarm')">
+                    🌐 SWARM NODES: <b id="swarm-count">1 (MASTER)</b>
+                </div>
+                <div class="top-pill clock-pill" id="sys-clock">00:00:00</div>
+            </div>
+        </header>
+
+        <!-- MAIN WORKSPACE -->
+        <div class="desktop-body">
+            
+            <!-- Left Desktop App Icons -->
+            <div class="icon-grid">
+                <div class="desk-icon" onclick="Kernel.openApp('fpga')">
+                    <div class="icon-frame">
+                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M9 3v2H7v2H5v2H3v2h2v2h2v2h2v2h2v-2h2v2h2v-2h2v-2h2v-2h2v-2h-2V9h-2V7h-2V5h-2V3h-2v2h-2V3H9zm0 4h6v6H9V7z"/></svg>
+                    </div>
+                    <span class="icon-label">SILICON FPGA</span>
+                </div>
+
+                <div class="desk-icon" onclick="Kernel.openApp('neuro')">
+                    <div class="icon-frame">
+                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/></svg>
+                    </div>
+                    <span class="icon-label">NEURO-SPIKE</span>
+                </div>
+
+                <div class="desk-icon" onclick="Kernel.openApp('swarm')">
+                    <div class="icon-frame">
+                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <span class="icon-label">SWARM CLUSTER</span>
+                </div>
+
+                <div class="desk-icon" onclick="Kernel.openApp('terminal')">
+                    <div class="icon-frame">
+                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.59-2.59L7.5 9l4 4-4 4z"/></svg>
+                    </div>
+                    <span class="icon-label">SYNAPSE SHELL</span>
+                </div>
+            </div>
+
+            <!-- FLOATING WINDOWS LAYER -->
+            <div id="window-layer"></div>
+
+            <!-- RIGHT TELEMETRY HUD -->
+            <aside class="telemetry-hud">
+                <div class="hud-card">
+                    <div class="hud-title">KERNEL TELEMETRY</div>
+                    <div class="hud-metric">
+                        <span>SILICON CLOCK</span>
+                        <b id="hud-fps">60.0 Hz</b>
+                    </div>
+                    <div class="hud-bar"><div id="bar-fps" style="width:95%"></div></div>
+
+                    <div class="hud-metric">
+                        <span>HEAP ALLOCATION</span>
+                        <b id="hud-ram">42.8 MB</b>
+                    </div>
+                    <div class="hud-bar"><div id="bar-ram" style="width:38%"></div></div>
+
+                    <div class="hud-metric">
+                        <span>NEURAL SYNAPSES</span>
+                        <b id="hud-syn">256 ACTIVE</b>
+                    </div>
+                    <div class="hud-bar"><div id="bar-syn" style="width:72%"></div></div>
+                </div>
+
+                <!-- Live Aero-Touch Hand Camera Preview -->
+                <div id="cam-hud" class="hud-card hidden">
+                    <div class="hud-title">AERO-TOUCH VISION</div>
+                    <div class="cam-box">
+                        <video id="webcam-video" playsinline></video>
+                        <canvas id="webcam-canvas"></canvas>
+                    </div>
+                    <div class="hud-sub" id="gesture-readout">PINCH THUMB + INDEX TO CLICK</div>
+                </div>
+
+                <div class="hud-card brand-card">
+                    <div class="legend-watermark">LEGEND</div>
+                    <div class="hud-sub">ARCHITECTURE // EST 2026</div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- BOTTOM TASKBAR -->
+        <footer id="taskbar">
+            <button class="start-btn" onclick="Kernel.openApp('terminal')">
+                SYNAPSE // CMD
+            </button>
+            <div id="taskbar-tabs" class="taskbar-tabs"></div>
+            <div class="taskbar-right">
+                <span id="audio-toggle" onclick="Kernel.toggleAudio()">🔊 SFX: ON</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- SYSTEM MODULES -->
+    <script src="os-kernel.js"></script>
+    <script src="silicon-fpga.js"></script>
+    <script src="neuro-spike.js"></script>
+    <script src="swarm-cluster.js"></script>
+</body>
+</html>
