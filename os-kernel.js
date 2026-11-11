@@ -1,10 +1,9 @@
 /* ============================================================================
-   SYNAPSE OS KERNEL v2.0 (ZERO-DOWNTIME UPGRADE) — POWERED BY LEGEND
-   Upgrades:
-   1. Fixed Aero-Touch Click (EMA Smoothing + Deep DOM Dispatch + Auto-Dwell Click)
-   2. Real Hardware GPU/CPU/RAM/Network Detection (WebGL Unmasked Renderer)
-   3. Persistent Linux Virtual File System (ls, cat, touch, mkdir, rm, hwinfo)
-   4. Autonomous Background Bot-Forge Daemons (bot list, bot start, bot stop)
+   SYNAPSE OS KERNEL v3.0 — POWERED BY LEGEND
+   Includes:
+   - Aero-Touch Hand Tracking (Pinch + Hover-Dwell Auto-Click)
+   - Real GPU/CPU/RAM/Network Hardware Detection
+   - Built-in Python 3.11 (Pyodide WASM) & Bot-Forge Code Studio IDE
    ============================================================================ */
 
 const Kernel = (() => {
@@ -12,10 +11,11 @@ const Kernel = (() => {
     let audioEnabled = true;
     let aeroActive = false;
     let audioCtx = null;
+    let pyodideInstance = null;
+    let pyodideLoading = false;
     const openWindows = {};
     const activeBots = {};
 
-    // --- REAL HARDWARE SPECS CACHE ---
     const HardwareSpecs = {
         cores: navigator.hardwareConcurrency || 4,
         ramGB: navigator.deviceMemory || 8,
@@ -42,11 +42,9 @@ const Kernel = (() => {
         }
     }
 
-    // --- VIRTUAL PERSISTENT LINUX FILE SYSTEM ---
     const defaultFS = {
-        'readme.txt': 'SYNAPSE OS v2.0 // POWERED BY LEGEND\nAll kernel modules operational.',
-        'hardware.cfg': 'MODE=HIGH_PERFORMANCE\nFPGA_LUT=64\nSNN_NEURONS=72',
-        'bot-guardian.js': '// Monitors system telemetry & auto-optimizes heap memory',
+        'readme.txt': 'SYNAPSE OS v3.0 // POWERED BY LEGEND\nAll kernel modules & Python WASM ready.',
+        'neural_sim.py': 'import math\nweights = [math.sin(x) * 0.8 for x in range(8)]\nprint("SYNAPSE SNN WEIGHT VECTOR:", [round(w, 3) for w in weights])',
         'legend.key': 'SHA256: 9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08'
     };
     let vfs = JSON.parse(localStorage.getItem('synapse_vfs') || JSON.stringify(defaultFS));
@@ -54,7 +52,6 @@ const Kernel = (() => {
         localStorage.setItem('synapse_vfs', JSON.stringify(vfs));
     }
 
-    // --- 1. WEBAUDIO SCI-FI SOUND SYNTHESIZER ---
     function playTone(freq = 880, duration = 0.06, type = 'sine') {
         if (!audioEnabled) return;
         try {
@@ -72,7 +69,6 @@ const Kernel = (() => {
         } catch (e) {}
     }
 
-    // --- 2. FORCE FULLSCREEN & LANDSCAPE LOCK ---
     async function forceLandscapeFullscreen() {
         playTone(1050, 0.08, 'triangle');
         try {
@@ -88,22 +84,20 @@ const Kernel = (() => {
         } catch (err) {}
     }
 
-    // --- 3. BIOS BOOT SEQUENCE ---
     function runBootSequence() {
         detectRealGPU();
-        // Never show Portrait Rotate Guard on Desktop PCs with fine mouse pointers
         const guard = document.getElementById('rotate-guard');
         if (guard && window.matchMedia('(pointer: fine)').matches) {
             guard.style.display = 'none';
         }
 
         const bootMessages = [
-            "[0.002] INIT SYNAPSE MICROKERNEL v2.0 (POWERED BY LEGEND)...",
+            "[0.002] INIT SYNAPSE MICROKERNEL v3.0 (POWERED BY LEGEND)...",
             `[0.019] CPU DETECTED: ${HardwareSpecs.cores} LOGICAL CORES // ${HardwareSpecs.ramGB}GB SYSTEM MEMORY [OK]`,
             `[0.045] GPU SILICON: ${HardwareSpecs.gpu.slice(0, 38)} [OK]`,
-            "[0.089] MOUNTING GATE-LEVEL FPGA LOGIC MATRIX (64-LUT)... [OK]",
+            "[0.089] MOUNTING GATE-LEVEL FPGA LOGIC MATRIX + 7-SEG DISPLAY... [OK]",
             "[0.130] ALLOCATING 72 LIF SPIKING NEURAL SYNAPSES (STDP)... [OK]",
-            "[0.195] CALIBRATING AERO-TOUCH OPTICAL CLICK & DWELL ENGINE... [OK]",
+            "[0.195] LINKING PYTHON 3.11 WEBASSEMBLY & BOT-FORGE STUDIO... [OK]",
             "[0.240] ALL SYSTEMS NOMINAL. READY FOR OPERATOR HANDSHAKE."
         ];
 
@@ -125,7 +119,7 @@ const Kernel = (() => {
                 clearInterval(timer);
                 btn.classList.remove('hidden');
             }
-        }, 230);
+        }, 220);
     }
 
     function enterDesktop() {
@@ -153,7 +147,6 @@ const Kernel = (() => {
         hudCard.appendChild(extra);
     }
 
-    // --- 4. HIGH-PRECISION QUANTUM CLOCK & REAL MEMORY TELEMETRY ---
     let lastFrameTime = performance.now();
     let frameCount = 0;
     let realFps = 60.0;
@@ -204,7 +197,6 @@ const Kernel = (() => {
 
             if (fpsEl) fpsEl.innerText = `${realFps} FPS`;
 
-            // Use real Chrome JS Heap Memory if available
             let usedMB = 44.2 + Object.keys(openWindows).length * 12.4;
             if (performance && performance.memory) {
                 usedMB = (performance.memory.usedJSHeapSize / (1024 * 1024)).toFixed(1);
@@ -216,7 +208,6 @@ const Kernel = (() => {
         }, 1000);
     }
 
-    // --- 5. LIVE HARDWARE BATTERY MONITOR ---
     function initHardwareBattery() {
         const batEl = document.getElementById('sys-battery');
         if ('getBattery' in navigator) {
@@ -232,7 +223,6 @@ const Kernel = (() => {
         }
     }
 
-    // --- 6. CYBERPUNK ANIMATED PARTICLE MATRIX ---
     function initBackgroundGrid() {
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
@@ -282,7 +272,7 @@ const Kernel = (() => {
         draw();
     }
 
-    // --- 7. MULTI-WINDOW MANAGER ---
+    // --- MULTI-WINDOW MANAGER ---
     function openApp(appId) {
         playTone(960, 0.07, 'sine');
         if (openWindows[appId]) {
@@ -303,10 +293,11 @@ const Kernel = (() => {
         win.style.zIndex = ++zIndexCounter;
 
         const titles = {
-            fpga: 'SILICON FPGA // GATE-LEVEL LOGIC LAB',
+            fpga: 'SILICON FPGA v3.0 // GATE-LEVEL LAB & 7-SEG DISPLAY',
             neuro: 'NEURO-SPIKE // 3RD-GEN BIOLOGICAL BRAIN SNN',
             swarm: 'SWARM-CLUSTER // WI-FI MULTI-PHONE SUPERCOMPUTER',
-            terminal: 'SYNAPSE SHELL v2.0 // ROOT TERMINAL & BOT-FORGE'
+            terminal: 'SYNAPSE SHELL v3.0 // ROOT TERMINAL',
+            ide: 'SYNAPSE CODE STUDIO // PYTHON 3.11 WASM & BOT-FORGE'
         };
 
         win.innerHTML = `
@@ -329,6 +320,7 @@ const Kernel = (() => {
 
         const container = document.getElementById(`body-${appId}`);
         if (appId === 'terminal') initTerminal(container);
+        else if (appId === 'ide') initCodeStudio(container);
         else if (appId === 'fpga' && window.SiliconFPGA) window.SiliconFPGA.mount(container);
         else if (appId === 'neuro' && window.NeuroSpike) window.NeuroSpike.mount(container);
         else if (appId === 'swarm' && window.SwarmCluster) window.SwarmCluster.mount(container);
@@ -405,16 +397,115 @@ const Kernel = (() => {
         window.addEventListener('touchend', () => isDown = false);
     }
 
-    // --- 8. UPGRADED TERMINAL (REAL HARDWARE, VFS & BOT-FORGE) ---
+    // --- 8. PYTHON 3.11 (PYODIDE WASM) & BOT-FORGE STUDIO IDE ---
+    function initCodeStudio(container) {
+        const defaultPy = `# SYNAPSE PYTHON 3.11 KERNEL (WebAssembly)
+import math, time
+
+print("⚡ Executing Neural Matrix Simulation on SYNAPSE OS...")
+neurons = [round(math.sin(i * 0.5) * 100, 2) for i in range(1, 9)]
+print("Spike Potentials (mV):", neurons)
+print("Total Synaptic Energy:", round(sum(map(abs, neurons)), 2), "pJ")
+print("STATUS: LEGEND ARCHITECTURE VERIFIED [OK]")`;
+
+        container.innerHTML = `
+            <div style="display:flex;flex-direction:column;height:100%;gap:8px;font-family:'Share Tech Mono',monospace;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;background:#040811;padding:6px 10px;border:1px solid rgba(0,240,255,0.25);border-radius:4px;">
+                    <div style="display:flex;gap:5px;align-items:center;">
+                        <button id="preset-py-neural" style="background:#00f0ff22;border:1px solid #00f0ff;color:#00f0ff;padding:3px 8px;font-size:0.66rem;cursor:pointer;">🐍 PY: NEURAL MATH</button>
+                        <button id="preset-py-crypto" style="background:#00f0ff22;border:1px solid #00f0ff;color:#00f0ff;padding:3px 8px;font-size:0.66rem;cursor:pointer;">🔐 PY: SHA MATRIX</button>
+                        <button id="preset-js-bot" style="background:#00ff9d22;border:1px solid #00ff9d;color:#00ff9d;padding:3px 8px;font-size:0.66rem;cursor:pointer;">🤖 JS: AUTO-BOT</button>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button id="run-py-btn" style="background:#00f0ff;color:#000;border:none;padding:4px 12px;font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:bold;cursor:pointer;">▶ RUN PYTHON 3.11</button>
+                        <button id="run-js-btn" style="background:#00ff9d;color:#000;border:none;padding:4px 12px;font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:bold;cursor:pointer;">⚡ RUN JS BOT</button>
+                    </div>
+                </div>
+
+                <textarea id="ide-editor" spellcheck="false" style="flex:1;width:100%;background:#02050a;color:#00ff9d;border:1px solid rgba(0,240,255,0.3);padding:10px;font-family:'Share Tech Mono',monospace;font-size:0.8rem;resize:none;outline:none;line-height:1.45;">${defaultPy}</textarea>
+
+                <div id="ide-output" style="height:85px;background:#010306;border-left:2px solid #00f0ff;padding:8px;font-size:0.75rem;color:#bfe3ff;overflow-y:auto;white-space:pre-wrap;">[STUDIO READY] Click '▶ RUN PYTHON 3.11' or '⚡ RUN JS BOT' to execute live code.</div>
+            </div>
+        `;
+
+        const editor = container.querySelector('#ide-editor');
+        const out = container.querySelector('#ide-output');
+
+        container.querySelector('#preset-py-neural').onclick = () => { editor.value = defaultPy; };
+        container.querySelector('#preset-py-crypto').onclick = () => {
+            editor.value = `# PYTHON HASH & PRIME BENCHMARK
+import hashlib
+msg = "SYNAPSE_POWERED_BY_LEGEND_2026"
+digest = hashlib.sha256(msg.encode()).hexdigest()
+primes = [n for n in range(2, 120) if all(n % d != 0 for d in range(2, int(n**0.5)+1))]
+print("SHA-256:", digest[:36] + "...")
+print("Primes Computed:", len(primes), "->", primes[:10])`;
+        };
+        container.querySelector('#preset-js-bot').onclick = () => {
+            editor.value = `// SYNAPSE AUTONOMOUS HARDWARE BOT (JavaScript)
+Kernel.openApp('fpga');
+const demoBtn = document.getElementById('demo-counter');
+if (demoBtn) demoBtn.click();
+return "🤖 Bot deployed: Opened Silicon FPGA & triggered Auto-Counter!";`;
+        };
+
+        container.querySelector('#run-js-btn').onclick = () => {
+            playTone(1150, 0.05, 'triangle');
+            try {
+                const fn = new Function(editor.value);
+                const res = fn();
+                out.innerHTML = `<span style="color:#00ff9d">[JS BOT EXECUTED]</span>\n${res || 'Completed successfully.'}`;
+            } catch (err) {
+                out.innerHTML = `<span style="color:#ff2a54">[JS ERROR]</span> ${err.message}`;
+            }
+        };
+
+        container.querySelector('#run-py-btn').onclick = async () => {
+            playTone(980, 0.06, 'sine');
+            out.innerHTML = `<span style="color:#ffb800">[PYTHON WASM]</span> Initializing Python 3.11 Kernel...`;
+
+            try {
+                if (!pyodideInstance) {
+                    if (!window.loadPyodide && !pyodideLoading) {
+                        pyodideLoading = true;
+                        await new Promise((resolve, reject) => {
+                            const s = document.createElement('script');
+                            s.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+                            s.onload = resolve;
+                            s.onerror = reject;
+                            document.head.appendChild(s);
+                        });
+                    }
+                    out.innerHTML = `<span style="color:#ffb800">[PYTHON WASM]</span> Downloading WebAssembly runtime (first run takes ~3s)...`;
+                    pyodideInstance = await window.loadPyodide();
+                }
+
+                let captured = [];
+                pyodideInstance.setStdout({ batched: (str) => captured.push(str) });
+                await pyodideInstance.runPythonAsync(editor.value);
+                out.innerHTML = `<span style="color:#00ff9d">[PYTHON 3.11 OUTPUT]</span>\n${captured.join('\n') || '(No stdout)'}`;
+            } catch (err) {
+                out.innerHTML = `<span style="color:#ff2a54">[PYTHON EXCEPTION]</span>\n${err.message}`;
+            }
+        };
+    }
+
+    // --- 9. TERMINAL WITH 1-CLICK ACTION BUTTONS ---
     function initTerminal(container) {
         container.innerHTML = `
-            <div class="term-output" id="term-out">SYNAPSE KERNEL v2.0 // POWERED BY LEGEND
-Detected GPU: <span style="color:#00f0ff">${HardwareSpecs.gpu}</span>
-Type 'help' for commands ('hwinfo', 'ls', 'cat', 'bot', 'neofetch').
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(0,240,255,0.2);">
+                <button onclick="Kernel.openApp('ide')" style="background:#00f0ff22;border:1px solid #00f0ff;color:#00f0ff;padding:3px 8px;font-size:0.68rem;cursor:pointer;font-family:'Orbitron',sans-serif;">🐍 PYTHON & BOT IDE</button>
+                <button onclick="Kernel.openApp('fpga')" style="background:#00ff9d22;border:1px solid #00ff9d;color:#00ff9d;padding:3px 8px;font-size:0.68rem;cursor:pointer;font-family:'Orbitron',sans-serif;">⚡ FPGA LAB</button>
+                <button onclick="Kernel.openApp('neuro')" style="background:#ffb80022;border:1px solid #ffb800;color:#ffb800;padding:3px 8px;font-size:0.68rem;cursor:pointer;font-family:'Orbitron',sans-serif;">🧠 NEURO BRAIN</button>
+                <button onclick="Kernel.openApp('swarm')" style="background:#ff2a5422;border:1px solid #ff2a54;color:#ff2a54;padding:3px 8px;font-size:0.68rem;cursor:pointer;font-family:'Orbitron',sans-serif;">🌐 SWARM CLUSTER</button>
+            </div>
+            <div class="term-output" id="term-out">SYNAPSE KERNEL v3.0 // POWERED BY LEGEND
+GPU: <span style="color:#00f0ff">${HardwareSpecs.gpu}</span>
+Tap any button above or type 'help', 'ide', 'python', 'hwinfo', 'ls', 'bot'.
 ──────────────────────────────────────────────────────────────────</div>
             <div class="term-input-line">
                 <span class="term-prompt">root@synapse:~#</span>
-                <input type="text" class="term-input" id="term-in" autofocus placeholder="type help, hwinfo, ls, bot start guardian..." />
+                <input type="text" class="term-input" id="term-in" autofocus placeholder="type ide, python, hwinfo, ls, bot start pulse..." />
             </div>
         `;
         const input = container.querySelector('#term-in');
@@ -432,26 +523,25 @@ Type 'help' for commands ('hwinfo', 'ls', 'cat', 'bot', 'neofetch').
 
                 let resp = '';
                 if (cmd === 'help') {
-                    resp = `SYNAPSE v2.0 Commands:
-  hwinfo               - Real GPU, CPU Cores, RAM & Network Hardware Probe
-  ls                   - List files in persistent Virtual File System
-  cat <file>           - Read file content (e.g., cat readme.txt)
-  touch <file> <text>  - Create/write file in persistent memory
-  rm <file>            - Delete file
-  bot list             - List available autonomous background bots
-  bot start <name>     - Launch bot ('guardian' or 'pulse')
-  bot stop <name>      - Stop running bot
+                    resp = `SYNAPSE v3.0 Commands:
+  ide / python         - Open Live Python 3.11 (WASM) & Bot-Forge Code Studio
+  hwinfo / neofetch    - Real GPU, CPU Cores, RAM & Network Hardware Probe
+  ls | cat <f>         - List / Read files in persistent Virtual File System
+  touch <f> <txt>      - Create file in persistent storage
+  bot start <name>     - Launch autonomous bot ('guardian' or 'pulse')
   fpga | neuro | swarm - Launch core hardware/neural modules
-  neofetch | clear     - System summary / Clear screen`;
+  clear                - Clear terminal output`;
+                } else if (cmd === 'ide' || cmd === 'python') {
+                    openApp('ide');
+                    resp = 'Launching SYNAPSE Code Studio (Python 3.11 WASM + Bot-Forge)...';
                 } else if (cmd === 'hwinfo' || cmd === 'neofetch') {
                     resp = `
-   💠 SYNAPSE // v2.0     OS: SYNAPSE WebKernel x86_64 (Widescreen)
+   💠 SYNAPSE // v3.0     OS: SYNAPSE WebKernel x86_64 (Widescreen)
    ────────────────       Architecture: POWERED BY LEGEND
    GPU SILICON:           ${HardwareSpecs.gpu}
    CPU TOPOLOGY:          ${HardwareSpecs.cores} Logical Threads
    MEMORY BUS:            ~${HardwareSpecs.ramGB} GB System RAM
-   NETWORK LINK:          ${HardwareSpecs.netMbps} Mbps (${HardwareSpecs.netType})
-   ACTIVE BOTS:           ${Object.keys(activeBots).length ? Object.keys(activeBots).join(', ') : 'NONE'}`;
+   PYTHON ENGINE:         Pyodide 3.11 WebAssembly Ready`;
                 } else if (cmd === 'ls') {
                     resp = Object.keys(vfs).map(f => `📄 ${f}`).join('    ');
                 } else if (cmd === 'cat') {
@@ -460,49 +550,26 @@ Type 'help' for commands ('hwinfo', 'ls', 'cat', 'bot', 'neofetch').
                     if (arg1) {
                         vfs[arg1] = arg2 || 'Created by root@synapse';
                         saveVFS();
-                        resp = `[VFS] File '${arg1}' saved to persistent storage.`;
+                        resp = `[VFS] Saved '${arg1}'.`;
                     } else resp = 'Usage: touch <filename> <content>';
-                } else if (cmd === 'rm') {
-                    if (vfs[arg1]) {
-                        delete vfs[arg1];
-                        saveVFS();
-                        resp = `[VFS] Deleted '${arg1}'.`;
-                    } else resp = `rm: cannot remove '${arg1}': No such file`;
                 } else if (cmd === 'bot') {
-                    if (arg1 === 'list' || !arg1) {
-                        resp = `Available Autonomous Bots:
-  1. guardian  - Monitors heap RAM & auto-cleans memory spikes
-  2. pulse     - Auto-injects periodic bio-electric spikes into Neuro-Spike brain
-Usage: 'bot start guardian' or 'bot stop guardian'`;
-                    } else if (arg1 === 'start' && arg2) {
-                        if (activeBots[arg2]) {
-                            resp = `[BOT-FORGE] Bot '${arg2}' is already running.`;
-                        } else if (arg2 === 'guardian') {
-                            activeBots.guardian = setInterval(() => {
-                                playTone(1450, 0.02, 'sine');
-                            }, 8000);
-                            resp = `🤖 [BOT-FORGE] 'guardian' daemon deployed in background (PID ${Math.floor(1000+Math.random()*9000)}).`;
-                        } else if (arg2 === 'pulse') {
+                    if (arg1 === 'start' && arg2 === 'pulse') {
+                        if (!activeBots.pulse) {
                             activeBots.pulse = setInterval(() => {
                                 const btn = document.getElementById('snn-shock-btn');
                                 if (btn) btn.click();
                             }, 3500);
-                            resp = `🤖 [BOT-FORGE] 'pulse' neural trainer bot active! Open 'neuro' to watch auto-stimulation.`;
-                        } else {
-                            resp = `Unknown bot '${arg2}'. Try 'guardian' or 'pulse'.`;
                         }
-                    } else if (arg1 === 'stop' && arg2) {
-                        if (activeBots[arg2]) {
-                            clearInterval(activeBots[arg2]);
-                            delete activeBots[arg2];
-                            resp = `[BOT-FORGE] Terminated bot '${arg2}'.`;
-                        } else resp = `Bot '${arg2}' is not running.`;
+                        resp = `🤖 [BOT-FORGE] 'pulse' neural trainer active!`;
+                    } else if (arg1 === 'stop') {
+                        Object.keys(activeBots).forEach(k => { clearInterval(activeBots[k]); delete activeBots[k]; });
+                        resp = `[BOT-FORGE] All background bots stopped.`;
+                    } else {
+                        resp = `Usage: 'bot start pulse' or 'bot stop' (Or open 'ide' for full JS/Python Bot Studio).`;
                     }
-                } else if (cmd === 'fpga') { openApp('fpga'); resp = 'Mounting Silicon FPGA Lab...'; }
+                } else if (cmd === 'fpga') { openApp('fpga'); resp = 'Mounting Silicon FPGA v3.0...'; }
                 else if (cmd === 'neuro') { openApp('neuro'); resp = 'Initializing Spiking Neural Network...'; }
-                else if (cmd === 'swarm') { openApp('swarm'); resp = 'Opening Wi-Fi Swarm Cluster Controller...'; }
-                else if (cmd === 'aero') { toggleAeroTouch(); resp = 'Toggling Aero-Touch Optical Hand Tracking...'; }
-                else if (cmd === 'time') { resp = `SYSTEM CHRONOMETER: ${new Date().toString()}`; }
+                else if (cmd === 'swarm') { openApp('swarm'); resp = 'Opening Wi-Fi Swarm Cluster...'; }
                 else if (cmd === 'clear') { out.innerHTML = ''; return; }
                 else if (cmd !== '') { resp = `synapse: command not found: ${raw}`; }
 
@@ -512,7 +579,7 @@ Usage: 'bot start guardian' or 'bot stop guardian'`;
         });
     }
 
-    // --- 9. UPGRADED AERO-TOUCH HAND ENGINE (PINCH + HOVER DWELL + DEEP CLICK) ---
+    // --- 10. AERO-TOUCH HAND ENGINE (PINCH + HOVER DWELL) ---
     let mpCamera = null;
     let lastPinch = false;
     let smoothX = window.innerWidth / 2;
@@ -520,11 +587,8 @@ Usage: 'bot start guardian' or 'bot stop guardian'`;
     let dwellTarget = null;
     let dwellFrames = 0;
 
-    // Fires a complete synthetic click + mousedown + visual laser ripple
     function triggerSyntheticClick(x, y, modeLabel = 'PINCH') {
         playTone(1380, 0.05, 'sine');
-
-        // Visual Cyan Shockwave Ripple at click point
         const ripple = document.createElement('div');
         ripple.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:12px;height:12px;border:2px solid #00ff9d;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:99999;transition:all 0.35s ease-out;`;
         document.body.appendChild(ripple);
@@ -537,26 +601,13 @@ Usage: 'bot start guardian' or 'bot stop guardian'`;
 
         const rawEl = document.elementFromPoint(x, y);
         if (!rawEl) return;
-
-        // Find nearest clickable parent (Icon, Button, Pill, or Canvas)
         const clickable = rawEl.closest('[onclick], button, .desk-icon, .top-pill, .task-tab, .win-btn, input, canvas') || rawEl;
+        if (clickable.tagName === 'INPUT' || clickable.tagName === 'TEXTAREA') clickable.focus();
 
-        if (clickable.tagName === 'INPUT') {
-            clickable.focus();
-        }
-
-        // Dispatch both MouseEvents (for canvases like Neuro-Spike) & native .click()
         const evtOpts = { bubbles: true, cancelable: true, clientX: x, clientY: y };
         clickable.dispatchEvent(new MouseEvent('mousedown', evtOpts));
         clickable.dispatchEvent(new MouseEvent('mouseup', evtOpts));
-        if (typeof clickable.click === 'function') {
-            clickable.click();
-        }
-
-        const readout = document.getElementById('gesture-readout');
-        if (readout) {
-            readout.innerText = `✅ ${modeLabel} CLICK -> ${clickable.className || clickable.tagName}`;
-        }
+        if (typeof clickable.click === 'function') clickable.click();
     }
 
     async function toggleAeroTouch() {
@@ -604,32 +655,25 @@ Usage: 'bot start guardian' or 'bot stop guardian'`;
 
                     const indexTip = lm[8];
                     const thumbTip = lm[4];
-
                     const targetX = (1 - indexTip.x) * window.innerWidth;
                     const targetY = indexTip.y * window.innerHeight;
 
-                    // Exponential Moving Average (EMA) smoothing so pinch doesn't jump cursor
                     smoothX = smoothX * 0.62 + targetX * 0.38;
                     smoothY = smoothY * 0.62 + targetY * 0.38;
 
                     cursor.style.left = `${smoothX}px`;
                     cursor.style.top = `${smoothY}px`;
 
-                    // Relaxed pinch threshold (0.082) for reliable mobile + laptop webcam detection
                     const pinchDist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
                     const isPinching = pinchDist < 0.082;
 
                     if (isPinching) {
                         cursor.classList.add('pinching');
                         document.getElementById('cursor-state').innerText = '⚡ CLICK!';
-                        if (!lastPinch) {
-                            triggerSyntheticClick(smoothX, smoothY, 'PINCH');
-                        }
+                        if (!lastPinch) triggerSyntheticClick(smoothX, smoothY, 'PINCH');
                         dwellFrames = 0;
                     } else {
                         cursor.classList.remove('pinching');
-
-                        // Hover-Dwell Auto-Click: Hold finger steady on any icon/button for ~22 frames (~1 sec)
                         const elUnder = document.elementFromPoint(smoothX, smoothY);
                         const hoverItem = elUnder ? elUnder.closest('[onclick], button, .desk-icon, .top-pill') : null;
 
@@ -638,7 +682,7 @@ Usage: 'bot start guardian' or 'bot stop guardian'`;
                             document.getElementById('cursor-state').innerText = `HOLD ${Math.min(100, Math.round((dwellFrames / 22) * 100))}%`;
                             if (dwellFrames === 22) {
                                 triggerSyntheticClick(smoothX, smoothY, 'DWELL');
-                                dwellFrames = -15; // Cooldown before next dwell click
+                                dwellFrames = -15;
                             }
                         } else {
                             dwellTarget = hoverItem;
