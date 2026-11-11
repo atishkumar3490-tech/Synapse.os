@@ -1,17 +1,59 @@
 /* ============================================================================
-   CORE.CSS CONTINUATION (v4.0 UPGRADE BLOCK — PASTE AT THE END OF core.css)
-   Includes: PC Rotate-Guard Lock, GPU Acceleration, Zero-Emoji SVG Icons,
-   Chrono-Core Time-Travel Scrubber Bar & Neural Substrate Telemetry
+   SYNAPSE OS // FULL HEAVY CORE STYLING (v4.0 LEGEND ARCHITECTURE)
    ============================================================================ */
 
-/* 1. Never show Portrait Rotate Screen on PC/Laptop Mouse Devices */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #03060c;
+    color: #00f0ff;
+    font-family: 'Share Tech Mono', monospace;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* --- ROTATE GUARD (PHONE PORTRAIT LOCK) --- */
+#rotate-guard {
+    position: fixed;
+    inset: 0;
+    background: #020408;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    gap: 15px;
+}
+
+.rotate-icon {
+    font-size: 3rem;
+    animation: pulseRotate 2s infinite ease-in-out;
+}
+
+@keyframes pulseRotate {
+    0%, 100% { transform: rotate(0deg); opacity: 0.6; }
+    50% { transform: rotate(90deg); opacity: 1; }
+}
+
+/* PC par kabhi bhi Rotate Screen warning nahi dikhegi */
 @media (hover: hover) and (pointer: fine) {
     #rotate-guard {
         display: none !important;
     }
 }
 
-/* 2. 60-FPS Hardware GPU Layer Promotion (Stops Aero-Touch & Window Lag) */
+/* --- 60-FPS GPU HARDWARE LAYER PROMOTION --- */
 .os-window,
 #aero-cursor,
 #bg-canvas,
@@ -21,7 +63,183 @@
     backface-visibility: hidden;
 }
 
-/* 3. Clean Vector SVG Icon Containers (Replaces All Emojis) */
+/* --- BOOT SCREEN TERMINAL --- */
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    background: #02050a;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+}
+
+.boot-terminal-box {
+    flex: 1;
+    background: #010307;
+    border: 1px solid rgba(0,240,255,0.3);
+    border-left: 3px solid #00f0ff;
+    border-radius: 4px;
+    padding: 16px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    overflow-y: auto;
+    color: #9ec2e6;
+    margin-bottom: 16px;
+}
+
+.log-ok {
+    color: #00ff9d;
+    font-weight: bold;
+}
+
+.boot-progress-wrap {
+    width: 100%;
+    height: 4px;
+    background: #071222;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+#boot-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00f0ff, #00ff9d);
+    box-shadow: 0 0 10px #00f0ff;
+    transition: width 0.2s ease;
+}
+
+.cyber-btn {
+    background: rgba(0,240,255,0.12);
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    padding: 12px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(0,240,255,0.2);
+}
+
+.cyber-btn:hover {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 25px #00f0ff;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- DESKTOP COCKPIT ENVIRONMENT --- */
+#desktop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#bg-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Top Status Bar */
+.top-status-bar {
+    height: 38px;
+    background: rgba(4,8,17,0.88);
+    border-bottom: 1px solid rgba(0,240,255,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+}
+
+.top-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0,240,255,0.6);
+}
+
+.top-pills {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.72rem;
+}
+
+.top-pill {
+    background: rgba(0,240,255,0.08);
+    border: 1px solid rgba(0,240,255,0.3);
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: #00f0ff;
+    cursor: pointer;
+}
+
+/* Main Workspace Grid */
+.workspace-grid {
+    flex: 1;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    padding: 16px;
+    gap: 16px;
+    pointer-events: none;
+}
+
+.workspace-grid * {
+    pointer-events: auto;
+}
+
+/* Desktop App Dock (Icons) */
+.icon-dock {
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.desk-icon {
+    width: 78px;
+    height: 78px;
+    background: rgba(4,8,17,0.85);
+    border: 1px solid rgba(0,240,255,0.28);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.desk-icon:hover {
+    border-color: #00f0ff;
+    background: rgba(0,240,255,0.12);
+    box-shadow: 0 0 18px rgba(0,240,255,0.4);
+    transform: translateY(-2px);
+}
+
+.icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .svg-cyber-icon {
     width: 28px;
     height: 28px;
@@ -29,7 +247,7 @@
     stroke-width: 1.6;
     fill: rgba(0, 240, 255, 0.08);
     filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     transition: all 0.2s ease;
 }
 
@@ -40,13 +258,274 @@
     transform: scale(1.08);
 }
 
-/* 4. CHRONO-CORE // QUANTUM MEMORY TIME-TRAVEL DOCK */
+.desk-icon span {
+    font-size: 0.62rem;
+    font-family: 'Orbitron', sans-serif;
+    color: #9ec2e6;
+    letter-spacing: 0.5px;
+}
+
+/* Center Holographic Stage */
+.center-holo-stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.holo-clock-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(3,7,15,0.65);
+    border: 1px solid rgba(0,240,255,0.22);
+    padding: 18px 36px;
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    box-shadow: inset 0 0 25px rgba(0,240,255,0.06), 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.holo-time {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(0,240,255,0.7);
+}
+
+.holo-ms {
+    font-size: 1.2rem;
+    color: #00ff9d;
+}
+
+.holo-date {
+    font-size: 0.8rem;
+    color: #64829e;
+    letter-spacing: 2px;
+    margin-top: 4px;
+}
+
+/* Right Telemetry HUD Sidebar */
+.telemetry-hud {
+    width: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hud-card {
+    background: rgba(4,8,17,0.85);
+    border: 1px solid rgba(0,240,255,0.25);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.72rem;
+    backdrop-filter: blur(8px);
+}
+
+.hud-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    color: #00f0ff;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0,240,255,0.2);
+    padding-bottom: 4px;
+}
+
+.hud-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: #020408;
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(0,240,255,0.2);
+}
+
+.hud-bar-fill {
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(90deg, #00f0ff, #00ff9d);
+    box-shadow: 0 0 8px #00f0ff;
+}
+
+/* --- MULTI-WINDOW MANAGER --- */
+#window-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 500;
+    pointer-events: none;
+}
+
+.os-window {
+    position: absolute;
+    width: 500px;
+    height: 340px;
+    background: rgba(3,7,15,0.94);
+    border: 1px solid rgba(0,240,255,0.4);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.85), inset 0 0 15px rgba(0,240,255,0.06);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+    transition: width 0.2s ease, height 0.2s ease, left 0.2s ease, top 0.2s ease;
+}
+
+.os-window.maximized {
+    left: 12px !important;
+    top: 48px !important;
+    width: calc(100vw - 24px) !important;
+    height: calc(100vh - 98px) !important;
+}
+
+.win-header {
+    height: 32px;
+    background: #060e1c;
+    border-bottom: 1px solid rgba(0,240,255,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: move;
+}
+
+.win-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    color: #00f0ff;
+}
+
+.win-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.win-btn {
+    background: transparent;
+    border: 1px solid rgba(0,240,255,0.3);
+    color: #00f0ff;
+    width: 22px;
+    height: 20px;
+    font-size: 0.58rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.win-btn:hover {
+    background: #00f0ff;
+    color: #000;
+}
+
+.win-btn.close:hover {
+    background: #ff2a54;
+    border-color: #ff2a54;
+    color: #fff;
+}
+
+.win-body {
+    flex: 1;
+    padding: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TERMINAL STYLING --- */
+.term-output {
+    flex: 1;
+    background: #010306;
+    border: 1px solid rgba(0,240,255,0.2);
+    padding: 8px;
+    font-size: 0.76rem;
+    color: #9ec2e6;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    border-radius: 3px;
+}
+
+.term-input-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #02050a;
+    border: 1px solid rgba(0,240,255,0.35);
+    padding: 4px 8px;
+    border-radius: 3px;
+}
+
+.term-prompt {
+    font-size: 0.75rem;
+    color: #00ff9d;
+    font-weight: bold;
+}
+
+.term-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    outline: none;
+}
+
+/* --- TASKBAR & CHRONO-CORE TIME TRAVEL SLIDER --- */
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 44px;
+    background: rgba(2,5,10,0.92);
+    border-top: 1px solid rgba(0,240,255,0.25);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 900;
+    backdrop-filter: blur(10px);
+}
+
+.taskbar-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.task-tab {
+    background: rgba(0,240,255,0.1);
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    padding: 5px 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    cursor: pointer;
+    border-radius: 3px;
+    letter-spacing: 1px;
+}
+
+.task-tab.active {
+    background: #00f0ff;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px #00f0ff;
+}
+
+/* Chrono-Core Quantum Time-Travel Scrubber Bar */
 #chrono-dock {
     position: fixed;
     left: 96px;
     right: 215px;
-    bottom: 36px;
-    height: 34px;
+    bottom: 48px;
+    height: 32px;
     background: rgba(3, 7, 15, 0.92);
     border: 1px solid rgba(0, 240, 255, 0.35);
     border-left: 3px solid #00f0ff;
@@ -64,8 +543,8 @@
 
 .chrono-tag {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 1.2px;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
     color: #00f0ff;
     white-space: nowrap;
 }
@@ -97,8 +576,8 @@
     border: 1px solid rgba(0, 240, 255, 0.4);
     color: #00f0ff;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.58rem;
-    padding: 3px 7px;
+    font-size: 0.55rem;
+    padding: 2px 6px;
     cursor: pointer;
     letter-spacing: 0.8px;
     transition: all 0.15s ease;
@@ -109,7 +588,6 @@
     color: #000;
 }
 
-/* 5. Quantum Time-Warp Screen Flash Effect */
 .chrono-warp-active {
     animation: quantumFlash 0.35s ease-out;
 }
@@ -119,7 +597,7 @@
     100% { filter: hue-rotate(0deg) brightness(1) contrast(1); }
 }
 
-/* 6. Kernel Spiking Substrate Mini-Bar inside Right Telemetry */
+/* Substrate Spiking Raster Mini-Bar inside Right Telemetry */
 #substrate-live-box {
     margin-top: 8px;
     padding-top: 6px;
@@ -130,9 +608,79 @@
 
 #substrate-raster {
     width: 100%;
-    height: 36px;
+    height: 34px;
     background: #02050a;
     border: 1px solid rgba(0, 240, 255, 0.25);
     margin-top: 4px;
     display: block;
+}
+
+/* --- AERO-TOUCH WEBCAM & LASER CURSOR HUD --- */
+#cam-hud {
+    position: fixed;
+    bottom: 56px;
+    right: 16px;
+    width: 160px;
+    height: 120px;
+    background: #03060c;
+    border: 1px solid #00f0ff;
+    border-radius: 4px;
+    z-index: 800;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,240,255,0.3);
+}
+
+#webcam-video {
+    display: none;
+}
+
+#webcam-canvas {
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+    display: block;
+}
+
+.cam-overlay-label {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 0.55rem;
+    color: #00ff9d;
+    background: rgba(0,0,0,0.6);
+    padding: 1px 4px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+#aero-cursor {
+    position: fixed;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #00f0ff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 12px #00f0ff;
+    transition: width 0.1s, height 0.1s, background 0.1s;
+}
+
+#aero-cursor.pinching {
+    width: 14px;
+    height: 14px;
+    background: #00ff9d;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px #00ff9d;
+}
+
+#cursor-state {
+    position: absolute;
+    top: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.58rem;
+    font-family: 'Orbitron', sans-serif;
+    color: #00ff9d;
+    white-space: nowrap;
+    text-shadow: 0 0 6px #00ff9d;
 }
