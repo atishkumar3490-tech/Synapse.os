@@ -1,203 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#030508">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SYNAPSE // OS — POWERED BY LEGEND</title>
-    <link rel="stylesheet" href="core.css">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- MediaPipe Hand Tracking CDN -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#020408" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SYNAPSE // OS v4.0 — BIO-DIGITAL SUBSTRATE</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Fonts: Orbitron (Headers) & Share Tech Mono (Telemetry/Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- External Engines: MediaPipe Hand Tracking & PeerJS WebRTC Mesh -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <!-- PeerJS CDN -->
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+    <link rel="stylesheet" href="core.css" />
 </head>
 <body>
 
-    <!-- CRT Scanline Overlay -->
-    <div class="crt-overlay"></div>
-
-    <!-- PORTRAIT WARNING GUARD (Forces user to rotate phone to Landscape) -->
+    <!-- 1. MOBILE PORTRAIT GUARD (Strictly hidden on PC/Mouse devices via CSS) -->
     <div id="rotate-guard">
-        <div class="rotate-card">
-            <div class="rotate-phone-anim">📱↻</div>
-            <div class="rotate-title">WIDESCREEN COCKPIT REQUIRED</div>
-            <div class="rotate-sub">ROTATE DEVICE TO <b>LANDSCAPE MODE</b> TO ENGAGE SYNAPSE OS</div>
-            <div class="rotate-brand">POWERED BY <b>LEGEND</b></div>
-            <button class="cyber-btn" style="margin-top:16px;" onclick="Kernel.forceLandscapeFullscreen()">
-                ⚡ FORCE LANDSCAPE & FULLSCREEN
-            </button>
+        <div class="guard-box">
+            <svg class="rotate-svg" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="1.5">
+                <rect x="5" y="2" width="14" height="20" rx="2" />
+                <path d="M12 18h.01" />
+                <path d="M2 12a10 10 0 0 1 10-10" stroke="#00ff9d" />
+            </svg>
+            <div class="guard-title">LANDSCAPE COCKPIT REQUIRED</div>
+            <p class="guard-sub">ROTATE MOBILE DEVICE HORIZONTALLY TO INITIALIZE WIDESCREEN BIO-DIGITAL SUBSTRATE</p>
+            <button class="cyber-btn" onclick="Kernel.forceLandscapeFullscreen()">[ FORCE WIDESCREEN LOCK ]</button>
         </div>
     </div>
 
-    <!-- VIRTUAL HAND CURSOR (AERO-TOUCH) -->
-    <div id="aero-cursor" class="hidden">
-        <div class="cursor-ring"></div>
-        <div class="cursor-dot"></div>
-        <span id="cursor-state">TRACKING</span>
-    </div>
-
-    <!-- 1. BIOS BOOT SCREEN -->
+    <!-- 2. BIOS / KERNEL BOOT SEQUENCE SCREEN -->
     <div id="boot-screen">
-        <div class="boot-box">
+        <div class="boot-frame">
             <div class="boot-header">
-                <span class="boot-title">SYNAPSE</span>
-                <span class="boot-sub">ARCH-KERNEL v4.9.0-SILICON // x86_64-WASM</span>
+                <div class="legend-diamond"></div>
+                <div>
+                    <div class="boot-title">SYNAPSE // OS <span class="ver-tag">v4.0 QUANTUM-CHRONO</span></div>
+                    <div class="boot-sub">BIO-DIGITAL NEURAL SUBSTRATE // POWERED BY LEGEND</div>
+                </div>
             </div>
-            <div class="boot-brand">POWERED BY <b>LEGEND</b></div>
-            
-            <div class="boot-progress-wrap">
-                <div id="boot-bar" class="boot-progress-bar"></div>
-            </div>
-            
             <div id="boot-logs" class="boot-logs"></div>
-            
+            <div class="boot-progress-wrap">
+                <div id="boot-bar" class="boot-bar"></div>
+            </div>
             <button id="boot-start-btn" class="cyber-btn hidden" onclick="Kernel.enterDesktop()">
-                ENGAGE WIDESCREEN NEURAL OS [FULLSCREEN]
+                [ INITIALIZE NEURAL COCKPIT // FULLSCREEN ]
             </button>
         </div>
     </div>
 
-    <!-- 2. MAIN DESKTOP ENVIRONMENT -->
+    <!-- 3. MAIN WIDESCREEN OPERATING SYSTEM DESKTOP -->
     <div id="desktop" class="hidden">
-        
-        <!-- Background Cyber Grid Canvas -->
+
+        <!-- Interactive Cellular Automata & Data-Gravity Shader Canvas -->
         <canvas id="bg-canvas"></canvas>
 
-        <!-- Center Desktop Holographic Chronometer Watermark -->
-        <div class="center-holo-clock">
-            <div class="holo-sys-tag">SYNAPSE // QUANTUM CHRONOMETER</div>
-            <div class="holo-time-row">
-                <span id="holo-time">00:00:00</span><span id="holo-ms" class="holo-ms">.000</span>
-            </div>
-            <div id="holo-date" class="holo-date">WEDNESDAY // 11 NOV 2026 // IST</div>
-            <div class="holo-legend">POWERED BY LEGEND</div>
-        </div>
-
-        <!-- TOP SYSTEM BAR -->
-        <header id="top-bar">
-            <div class="brand-group">
-                <span class="sys-badge">SYNAPSE</span>
-                <span class="sys-divider">//</span>
-                <span class="brand-legend">POWERED BY LEGEND</span>
+        <!-- TOP COMMAND BAR -->
+        <header class="top-bar">
+            <div class="brand-cluster" onclick="Kernel.forceLandscapeFullscreen()" title="Toggle Fullscreen Lock">
+                <span class="diamond-mini"></span>
+                <span class="brand-name">SYNAPSE // OS</span>
+                <span class="brand-badge">LEGEND ARCH</span>
             </div>
 
-            <div class="top-controls">
-                <button id="aero-btn" class="top-pill" onclick="Kernel.toggleAeroTouch()">
-                    🖐️ AERO: <b id="aero-status">OFF</b>
+            <div class="top-Controls">
+                <button class="top-pill" id="physics-mode-btn" onclick="if(window.ChronoFabric) ChronoFabric.cycleFieldMode()">
+                    FIELD: <b id="field-mode-label">GRAVITY-MESH</b>
                 </button>
-                <div class="top-pill" id="cluster-pill" onclick="Kernel.openApp('swarm')">
-                    🌐 SWARM: <b id="swarm-count">1 NODE</b>
-                </div>
-                <div class="top-pill" id="pwr-pill">
-                    🔋 PWR: <b id="sys-battery">100%</b>
-                </div>
-                <div class="top-pill clock-pill" onclick="Kernel.forceLandscapeFullscreen()" title="Click for Fullscreen">
-                    🕒 <b id="sys-clock">00:00:00</b> <span id="sys-ampm">IST</span> ⛶
-                </div>
+                <button class="top-pill" onclick="Kernel.toggleAeroTouch()">
+                    OPTICAL HAND: <b id="aero-status">OFF</b>
+                </button>
+                <button class="top-pill" onclick="Kernel.openApp('swarm')">
+                    DARK-GRID: <b id="swarm-count">1 NODE</b>
+                </button>
+                <button class="top-pill" id="audio-toggle" onclick="Kernel.toggleAudio()">
+                    SFX: ON
+                </button>
+            </div>
+
+            <div class="sys-tray">
+                <span class="tray-tag">PWR: <b id="sys-battery">100%</b></span>
+                <span class="tray-clock">
+                    <span id="sys-clock">00:00:00</span>
+                    <small id="sys-ampm">AM</small>
+                </span>
             </div>
         </header>
 
-        <!-- MAIN WORKSPACE -->
-        <div class="desktop-body">
-            
-            <!-- Left Desktop App Icons -->
-            <div class="icon-grid">
-                <div class="desk-icon" onclick="Kernel.openApp('fpga')">
-                    <div class="icon-frame">
-                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M9 3v2H7v2H5v2H3v2h2v2h2v2h2v2h2v-2h2v2h2v-2h2v-2h2v-2h2v-2h-2V9h-2V7h-2V5h-2V3h-2v2h-2V3H9zm0 4h6v6H9V7z"/></svg>
-                    </div>
-                    <span class="icon-label">SILICON FPGA</span>
-                </div>
+        <!-- LEFT VECTOR ICON DOCK (Zero Emojis - Pure Industrial SVG Wireframes) -->
+        <aside class="left-dock">
+            <div class="desk-icon" onclick="Kernel.openApp('fpga')">
+                <svg viewBox="0 0 24 24" class="dock-svg"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 1v5M15 1v5M9 18v5M15 18v5M1 9h5M1 15h5M18 9h5M18 15h5"/></svg>
+                <span>SILICON FPGA</span>
+            </div>
+            <div class="desk-icon" onclick="Kernel.openApp('neuro')">
+                <svg viewBox="0 0 24 24" class="dock-svg"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="12" r="3"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 7.5l2 3M16 7.5l-2 3M8 16.5l2-3M16 16.5l-2-3"/></svg>
+                <span>NEURO-SPIKE</span>
+            </div>
+            <div class="desk-icon" onclick="Kernel.openApp('swarm')">
+                <svg viewBox="0 0 24 24" class="dock-svg"><polygon points="12 2 21 7 21 17 12 22 3 17 3 7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v7.5M21 7l-6.8 3.8M21 17l-6.8-3.8M12 22v-7.5M3 17l6.8-3.8M3 7l6.8 3.8"/></svg>
+                <span>DARK-GRID P2P</span>
+            </div>
+            <div class="desk-icon" onclick="Kernel.openApp('ide')">
+                <svg viewBox="0 0 24 24" class="dock-svg"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
+                <span>NEURAL STUDIO</span>
+            </div>
+            <div class="desk-icon" onclick="Kernel.openApp('terminal')">
+                <svg viewBox="0 0 24 24" class="dock-svg"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <span>ROOT SHELL</span>
+            </div>
+        </aside>
 
-                <div class="desk-icon" onclick="Kernel.openApp('neuro')">
-                    <div class="icon-frame">
-                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/></svg>
-                    </div>
-                    <span class="icon-label">NEURO-SPIKE</span>
-                </div>
+        <!-- CENTER HOLOGRAPHIC CHRONOMETER & SUBSTRATE WATERMARK -->
+        <section class="center-holo">
+            <div class="holo-tag">QUANTUM CHRONOMETER // STATE-ENTANGLED</div>
+            <div class="holo-clock-row">
+                <span id="holo-time">00:00:00</span><span id="holo-ms">.000</span>
+            </div>
+            <div id="holo-date" class="holo-date">SYNCHRONIZING TEMPORAL AXIS...</div>
+            <div class="holo-brand">POWERED BY LEGEND // ZERO-SERVER ARCHITECTURE</div>
+        </section>
 
-                <div class="desk-icon" onclick="Kernel.openApp('swarm')">
-                    <div class="icon-frame">
-                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    </div>
-                    <span class="icon-label">SWARM CLUSTER</span>
-                </div>
-
-                <div class="desk-icon" onclick="Kernel.openApp('terminal')">
-                    <div class="icon-frame">
-                        <svg viewBox="0 0 24 24" class="cyber-svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.59-2.59L7.5 9l4 4-4 4z"/></svg>
-                    </div>
-                    <span class="icon-label">SYNAPSE SHELL</span>
-                </div>
+        <!-- RIGHT HARDWARE & NEURAL TELEMETRY HUD -->
+        <aside class="telemetry-hud">
+            <div class="hud-card">
+                <div class="hud-title">SILICON & CORTEX TELEMETRY</div>
+                <div class="hud-row"><span>RENDER ENGINE</span><b id="hud-fps">60.0 FPS</b></div>
+                <div class="hud-row"><span>HEAP ALLOC</span><b id="hud-ram">42.0 MB</b></div>
+                <div class="hud-bar-bg"><div id="bar-ram" class="hud-bar-fill"></div></div>
+                <div class="hud-row"><span>CORTEX SYNAPSES</span><b id="hud-syn">72 ACTIVE</b></div>
+                <div class="hud-row"><span>CHRONO STATES</span><b id="hud-chrono-count" style="color:#ffb800">1 SNAPSHOT</b></div>
             </div>
 
-            <!-- FLOATING WINDOWS LAYER -->
-            <div id="window-layer"></div>
-
-            <!-- RIGHT TELEMETRY HUD -->
-            <aside class="telemetry-hud">
-                <div class="hud-card">
-                    <div class="hud-title">KERNEL TELEMETRY</div>
-                    <div class="hud-metric">
-                        <span>SILICON CLOCK</span>
-                        <b id="hud-fps">60.0 Hz</b>
-                    </div>
-                    <div class="hud-bar"><div id="bar-fps" style="width:95%"></div></div>
-
-                    <div class="hud-metric">
-                        <span>HEAP ALLOCATION</span>
-                        <b id="hud-ram">42.8 MB</b>
-                    </div>
-                    <div class="hud-bar"><div id="bar-ram" style="width:38%"></div></div>
-
-                    <div class="hud-metric">
-                        <span>NEURAL SYNAPSES</span>
-                        <b id="hud-syn">256 ACTIVE</b>
-                    </div>
-                    <div class="hud-bar"><div id="bar-syn" style="width:72%"></div></div>
+            <!-- Optical Hand Tracking & Biometric Camera HUD -->
+            <div id="cam-hud" class="hud-card hidden">
+                <div class="hud-title">OPTICAL VECTOR SENSOR</div>
+                <div class="cam-wrap">
+                    <video id="webcam-video" autoplay playsinline muted></video>
+                    <canvas id="webcam-canvas" width="220" height="140"></canvas>
                 </div>
+                <div id="gesture-readout" class="gesture-status">AWAITING OPTICAL LOCK...</div>
+            </div>
+        </aside>
 
-                <!-- Live Aero-Touch Hand Camera Preview -->
-                <div id="cam-hud" class="hud-card hidden">
-                    <div class="hud-title">AERO-TOUCH VISION</div>
-                    <div class="cam-box">
-                        <video id="webcam-video" playsinline></video>
-                        <canvas id="webcam-canvas"></canvas>
-                    </div>
-                    <div class="hud-sub" id="gesture-readout">PINCH THUMB + INDEX TO CLICK</div>
-                </div>
+        <!-- FLOATING MULTI-WINDOW WORKSPACE LAYER -->
+        <main id="window-layer"></main>
 
-                <div class="hud-card brand-card">
-                    <div class="legend-watermark">LEGEND</div>
-                    <div class="hud-sub">ARCHITECTURE // EST 2026</div>
-                </div>
-            </aside>
+        <!-- CHRONO-CORE QUANTUM TIME-TRAVEL SCRUBBER BAR -->
+        <div id="chrono-dock" class="chrono-dock">
+            <div class="chrono-left">
+                <span class="chrono-badge">CHRONO-CORE</span>
+                <span id="chrono-status" class="chrono-state-text">LIVE STREAM [T-0.0s]</span>
+            </div>
+            <div class="chrono-slider-wrap">
+                <input type="range" id="chrono-slider" min="0" max="0" value="0" step="1" title="Drag left to rewind entire OS state in time" />
+            </div>
+            <div class="chrono-actions">
+                <button class="chrono-btn" onclick="if(window.ChronoFabric) ChronoFabric.captureSnapshot('MANUAL')">[ + SNAPSHOT ]</button>
+                <button class="chrono-btn live" onclick="if(window.ChronoFabric) ChronoFabric.jumpToLive()">[ LIVE NOW ]</button>
+            </div>
         </div>
 
         <!-- BOTTOM TASKBAR -->
-        <footer id="taskbar">
-            <button class="start-btn" onclick="Kernel.openApp('terminal')">
-                SYNAPSE // CMD
-            </button>
+        <footer class="bottom-bar">
+            <div class="start-node" onclick="Kernel.openApp('terminal')">
+                [ ROOT // LEGEND ]
+            </div>
             <div id="taskbar-tabs" class="taskbar-tabs"></div>
             <div class="taskbar-right">
-                <span class="fs-btn" onclick="Kernel.forceLandscapeFullscreen()">⛶ FULLSCREEN</span>
-                <span id="audio-toggle" onclick="Kernel.toggleAudio()">🔊 SFX: ON</span>
+                <span id="net-gravity-stat">DATA GRAVITY: LOCAL P2P</span>
             </div>
         </footer>
+
+        <!-- AERO-TOUCH LASER CURSOR OVERLAY -->
+        <div id="aero-cursor" class="hidden">
+            <div class="cursor-ring"></div>
+            <span id="cursor-state">TRACKING</span>
+        </div>
+
     </div>
 
     <!-- SYSTEM MODULES -->
-    <script src="os-kernel.js"></script>
     <script src="silicon-fpga.js"></script>
     <script src="neuro-spike.js"></script>
     <script src="swarm-cluster.js"></script>
+    <script src="os-kernel.js"></script>
+    <script src="chrono-fabric.js"></script>
 </body>
 </html>
