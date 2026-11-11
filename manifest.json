@@ -1,0 +1,10 @@
+{
+  "name": "SYNAPSE // OS — Powered by LEGEND",
+  "short_name": "SYNAPSE OS",
+  "description": "Decentralized Spiking Neural Operating System & Hardware Lab",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#03060c",
+  "theme_color": "#00f0ff"
+}
