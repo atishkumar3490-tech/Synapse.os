@@ -1,59 +1,115 @@
 /* ============================================================================
-   SYNAPSE OS // FULL HEAVY CORE STYLING (v4.0 LEGEND ARCHITECTURE)
+   SYNAPSE // OS — MASTER CORE.CSS (v4.0 COMPLETE & UNIFIED)
+   Synced with: index.html, os-kernel.js, chrono-fabric.js,
+   silicon-fpga.js, neuro-spike.js, swarm-cluster.js
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg-deep: #02050a;
+    --bg-panel: rgba(4, 9, 18, 0.9);
+    --bg-win: rgba(3, 7, 15, 0.95);
+    --cyan: #00f0ff;
+    --cyan-dim: rgba(0, 240, 255, 0.28);
+    --cyan-glow: rgba(0, 240, 255, 0.55);
+    --green: #00ff9d;
+    --amber: #ffb800;
+    --red: #ff2a54;
+    --text-main: #d8f0ff;
+    --text-muted: #64829e;
+}
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
-body, html {
-    width: 100%;
-    height: 100%;
+html, body {
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
-    background: #03060c;
-    color: #00f0ff;
+    background-color: var(--bg-deep);
+    color: var(--text-main);
     font-family: 'Share Tech Mono', monospace;
     user-select: none;
     -webkit-user-select: none;
 }
 
-/* --- ROTATE GUARD (PHONE PORTRAIT LOCK) --- */
+/* --- CRITICAL VISIBILITY OVERRIDE (FIXES STUCK OPEN SCREEN) --- */
+.hidden,
+#boot-screen.hidden,
+#desktop.hidden,
+#cam-hud.hidden,
+#aero-cursor.hidden,
+#boot-start-btn.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Custom Cyber Scrollbars */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #020408;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.35);
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cyan);
+}
+
+/* --- 1. ROTATE GUARD (HIDDEN BY DEFAULT — ONLY PHONE PORTRAIT) --- */
 #rotate-guard {
+    display: none !important;
     position: fixed;
     inset: 0;
-    background: #020408;
+    background: radial-gradient(circle at center, #061326 0%, #020408 100%);
     z-index: 99999;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 20px;
-    gap: 15px;
+    padding: 24px;
+    gap: 14px;
+}
+
+/* Show ONLY on actual touchscreen phones held vertically (Portrait) */
+@media screen and (orientation: portrait) and (max-width: 900px) and (hover: none) and (pointer: coarse) {
+    #rotate-guard {
+        display: flex !important;
+    }
+}
+
+.rotate-box, .rotate-card {
+    max-width: 320px;
+    background: rgba(4, 10, 20, 0.92);
+    border: 1px solid var(--cyan);
+    padding: 22px;
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
 }
 
 .rotate-icon {
-    font-size: 3rem;
+    font-size: 2.8rem;
+    color: var(--cyan);
+    margin-bottom: 10px;
     animation: pulseRotate 2s infinite ease-in-out;
 }
 
 @keyframes pulseRotate {
-    0%, 100% { transform: rotate(0deg); opacity: 0.6; }
-    50% { transform: rotate(90deg); opacity: 1; }
+    0%, 100% { transform: rotate(0deg); opacity: 0.65; }
+    50% { transform: rotate(-90deg); opacity: 1; }
 }
 
-/* PC par kabhi bhi Rotate Screen warning nahi dikhegi */
-@media (hover: hover) and (pointer: fine) {
-    #rotate-guard {
-        display: none !important;
-    }
-}
-
-/* --- 60-FPS GPU HARDWARE LAYER PROMOTION --- */
+/* --- 2. 60-FPS GPU HARDWARE LAYER PROMOTION --- */
 .os-window,
 #aero-cursor,
 #bg-canvas,
@@ -63,371 +119,524 @@ body, html {
     backface-visibility: hidden;
 }
 
-/* --- BOOT SCREEN TERMINAL --- */
+/* --- 3. BIOS BOOT SCREEN --- */
 #boot-screen {
     position: fixed;
     inset: 0;
-    background: #02050a;
+    background: radial-gradient(circle at 50% 25%, #071528 0%, #02050a 80%);
     z-index: 10000;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-.boot-terminal-box {
-    flex: 1;
+.boot-box, .boot-container {
+    width: min(680px, 94vw);
+    background: rgba(3, 7, 15, 0.94);
+    border: 1px solid var(--cyan-dim);
+    border-top: 2px solid var(--cyan);
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.boot-header, .boot-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-shadow: 0 0 12px var(--cyan-glow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#boot-logs, .boot-terminal-box, .boot-logs {
+    height: 170px;
     background: #010307;
-    border: 1px solid rgba(0,240,255,0.3);
-    border-left: 3px solid #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    border-left: 3px solid var(--cyan);
     border-radius: 4px;
-    padding: 16px;
-    font-size: 0.82rem;
-    line-height: 1.5;
+    padding: 12px;
+    font-size: 0.78rem;
+    line-height: 1.55;
     overflow-y: auto;
     color: #9ec2e6;
-    margin-bottom: 16px;
 }
 
 .log-ok {
-    color: #00ff9d;
+    color: var(--green);
     font-weight: bold;
 }
 
-.boot-progress-wrap {
+.boot-progress, .boot-progress-wrap, .boot-bar-bg {
     width: 100%;
-    height: 4px;
-    background: #071222;
-    border-radius: 2px;
+    height: 6px;
+    background: #06101e;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 3px;
     overflow: hidden;
-    margin-bottom: 14px;
 }
 
 #boot-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #00f0ff, #00ff9d);
-    box-shadow: 0 0 10px #00f0ff;
-    transition: width 0.2s ease;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    box-shadow: 0 0 12px var(--cyan);
+    transition: width 0.18s ease;
 }
 
-.cyber-btn {
-    background: rgba(0,240,255,0.12);
-    border: 1px solid #00f0ff;
-    color: #00f0ff;
-    padding: 12px 24px;
+.cyber-btn, #boot-start-btn {
+    width: 100%;
+    background: rgba(0, 240, 255, 0.14);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 10px 18px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: 700;
     cursor: pointer;
-    letter-spacing: 2px;
+    letter-spacing: 1.8px;
     border-radius: 4px;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 15px rgba(0,240,255,0.2);
+    text-transform: uppercase;
+    transition: all 0.18s ease;
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.2);
 }
 
-.cyber-btn:hover {
-    background: #00f0ff;
-    color: #000;
-    box-shadow: 0 0 25px #00f0ff;
+.cyber-btn:hover, #boot-start-btn:hover {
+    background: var(--cyan);
+    color: #000000;
+    box-shadow: 0 0 24px var(--cyan);
 }
 
-.hidden {
-    display: none !important;
-}
-
-/* --- DESKTOP COCKPIT ENVIRONMENT --- */
+/* --- 4. MAIN DESKTOP COCKPIT --- */
 #desktop {
     position: fixed;
     inset: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
+    background: radial-gradient(circle at 50% 45%, #061121 0%, #02050a 85%);
 }
 
 #bg-canvas {
-    position: absolute;
+    position: fixed;
     inset: 0;
+    width: 100vw;
+    height: 100vh;
     z-index: 0;
+    pointer-events: none;
 }
 
-/* Top Status Bar */
-.top-status-bar {
-    height: 38px;
-    background: rgba(4,8,17,0.88);
-    border-bottom: 1px solid rgba(0,240,255,0.25);
+/* --- 5. TOP STATUS BAR (Supports all class aliases) --- */
+.top-bar, .top-status-bar, #top-bar, header {
+    position: relative;
+    height: 36px;
+    background: rgba(3, 8, 16, 0.9);
+    border-bottom: 1px solid var(--cyan-dim);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
-    z-index: 100;
-    backdrop-filter: blur(8px);
+    padding: 0 14px;
+    z-index: 600;
+    backdrop-filter: blur(10px);
 }
 
-.top-brand {
+.brand-title, .top-brand, .os-logo {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 1.8px;
     color: #ffffff;
-    text-shadow: 0 0 10px rgba(0,240,255,0.6);
+    text-shadow: 0 0 10px var(--cyan-glow);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.top-pills {
+.brand-sub, .legend-tag {
+    font-size: 0.62rem;
+    color: var(--green);
+    border: 1px solid rgba(0, 255, 157, 0.4);
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(0, 255, 157, 0.08);
+}
+
+.top-controls, .top-pills, .status-cluster, .top-right {
     display: flex;
-    gap: 12px;
     align-items: center;
-    font-size: 0.72rem;
+    gap: 8px;
+    font-size: 0.7rem;
 }
 
 .top-pill {
-    background: rgba(0,240,255,0.08);
-    border: 1px solid rgba(0,240,255,0.3);
-    padding: 4px 10px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.32);
+    color: var(--cyan);
+    padding: 3px 9px;
     border-radius: 3px;
-    color: #00f0ff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
     cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
 }
 
-/* Main Workspace Grid */
-.workspace-grid {
+.top-pill:hover {
+    background: rgba(0, 240, 255, 0.22);
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.35);
+}
+
+.clock-pill {
+    font-family: 'Orbitron', sans-serif;
+    color: #ffffff;
+    border-color: rgba(0, 255, 157, 0.4);
+}
+
+#sys-ampm {
+    color: var(--green);
+    font-size: 0.6rem;
+    margin-left: 3px;
+}
+
+/* --- 6. WORKSPACE STAGE (LEFT DOCK + CENTER HOLO + RIGHT HUD) --- */
+.workspace-grid, .desktop-grid, .cockpit-grid, .desktop-stage, main {
     flex: 1;
     position: relative;
     z-index: 10;
     display: flex;
-    padding: 16px;
-    gap: 16px;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 14px;
+    overflow: hidden;
     pointer-events: none;
 }
 
-.workspace-grid * {
+.workspace-grid > *, .desktop-grid > *, .cockpit-grid > *, .desktop-stage > * {
     pointer-events: auto;
 }
 
-/* Desktop App Dock (Icons) */
+/* Left Icon Dock */
 .icon-dock {
-    width: 90px;
+    width: 84px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
+    z-index: 50;
 }
 
 .desk-icon {
     width: 78px;
-    height: 78px;
-    background: rgba(4,8,17,0.85);
-    border: 1px solid rgba(0,240,255,0.28);
-    border-radius: 6px;
+    height: 68px;
+    background: rgba(4, 9, 18, 0.86);
+    border: 1px solid rgba(0, 240, 255, 0.28);
+    border-left: 2px solid var(--cyan);
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: all 0.18s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    padding: 4px;
 }
 
 .desk-icon:hover {
-    border-color: #00f0ff;
-    background: rgba(0,240,255,0.12);
-    box-shadow: 0 0 18px rgba(0,240,255,0.4);
-    transform: translateY(-2px);
+    background: rgba(0, 240, 255, 0.14);
+    border-color: var(--green);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    transform: translateX(3px);
 }
 
 .icon-box {
+    font-size: 1.35rem;
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--cyan);
 }
 
 .svg-cyber-icon {
-    width: 28px;
-    height: 28px;
-    stroke: #00f0ff;
-    stroke-width: 1.6;
+    width: 24px;
+    height: 24px;
+    stroke: var(--cyan);
+    stroke-width: 1.7;
     fill: rgba(0, 240, 255, 0.08);
-    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
-    margin-bottom: 4px;
+    filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.45));
     transition: all 0.2s ease;
 }
 
 .desk-icon:hover .svg-cyber-icon {
-    stroke: #00ff9d;
-    fill: rgba(0, 255, 157, 0.16);
-    filter: drop-shadow(0 0 10px rgba(0, 255, 157, 0.75));
+    stroke: var(--green);
+    fill: rgba(0, 255, 157, 0.18);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 157, 0.8));
     transform: scale(1.08);
 }
 
 .desk-icon span {
-    font-size: 0.62rem;
     font-family: 'Orbitron', sans-serif;
-    color: #9ec2e6;
-    letter-spacing: 0.5px;
+    font-size: 0.56rem;
+    font-weight: 700;
+    color: #bfe3ff;
+    letter-spacing: 0.6px;
 }
 
-/* Center Holographic Stage */
-.center-holo-stage {
+/* Center Holographic Clock Widget */
+.center-holo-stage, .holo-center, .center-stage, .holo-clock-wrap {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    pointer-events: none;
 }
 
-.holo-clock-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(3,7,15,0.65);
-    border: 1px solid rgba(0,240,255,0.22);
-    padding: 18px 36px;
+.holo-clock-container, .holo-clock-card, .holo-box {
+    background: rgba(3, 8, 16, 0.55);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    border-top: 2px solid var(--cyan);
+    border-bottom: 2px solid var(--green);
+    padding: 16px 32px;
     border-radius: 8px;
-    backdrop-filter: blur(12px);
-    box-shadow: inset 0 0 25px rgba(0,240,255,0.06), 0 10px 30px rgba(0,0,0,0.6);
+    text-align: center;
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.06), 0 10px 30px rgba(0, 0, 0, 0.65);
 }
 
-.holo-time {
+.holo-time-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+#holo-time, .holo-time {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3.2rem;
+    font-size: clamp(1.8rem, 4vw, 3.1rem);
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 3px;
-    text-shadow: 0 0 20px rgba(0,240,255,0.7);
+    text-shadow: 0 0 18px var(--cyan-glow);
 }
 
-.holo-ms {
-    font-size: 1.2rem;
-    color: #00ff9d;
+#holo-ms, .holo-ms {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.85rem, 1.8vw, 1.25rem);
+    color: var(--green);
+    font-weight: 700;
 }
 
-.holo-date {
-    font-size: 0.8rem;
-    color: #64829e;
+#holo-date, .holo-date {
+    font-size: 0.72rem;
+    color: #8ab4d8;
     letter-spacing: 2px;
-    margin-top: 4px;
+    margin-top: 6px;
+}
+
+.holo-sub, .holo-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    margin-top: 6px;
+    opacity: 0.85;
 }
 
 /* Right Telemetry HUD Sidebar */
 .telemetry-hud {
-    width: 210px;
+    width: 205px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    z-index: 50;
 }
 
 .hud-card {
-    background: rgba(4,8,17,0.85);
-    border: 1px solid rgba(0,240,255,0.25);
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 0.72rem;
-    backdrop-filter: blur(8px);
-}
-
-.hud-title {
-    font-family: 'Orbitron', sans-serif;
+    background: rgba(4, 9, 18, 0.88);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-right: 2px solid var(--cyan);
+    border-radius: 5px;
+    padding: 10px 12px;
     font-size: 0.68rem;
-    color: #00f0ff;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(0,240,255,0.2);
-    padding-bottom: 4px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
-.hud-bar-bg {
+.hud-title, .hud-card h4 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.64rem;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.hud-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #9ec2e6;
+}
+
+.hud-row b {
+    color: var(--green);
+}
+
+.hud-bar, .hud-bar-bg {
     width: 100%;
     height: 5px;
     background: #020408;
+    border: 1px solid rgba(0, 240, 255, 0.22);
     border-radius: 3px;
-    margin-top: 5px;
     overflow: hidden;
-    border: 1px solid rgba(0,240,255,0.2);
+    margin: 4px 0 8px 0;
 }
 
-.hud-bar-fill {
-    width: 45%;
+#bar-ram, .hud-bar-fill {
+    width: 42%;
     height: 100%;
-    background: linear-gradient(90deg, #00f0ff, #00ff9d);
-    box-shadow: 0 0 8px #00f0ff;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    box-shadow: 0 0 8px var(--cyan);
+    transition: width 0.3s ease;
 }
 
-/* --- MULTI-WINDOW MANAGER --- */
+#gesture-readout {
+    margin-top: 6px;
+    padding-top: 5px;
+    border-top: 1px dashed rgba(0, 240, 255, 0.2);
+    font-size: 0.62rem;
+    color: var(--amber);
+    word-break: break-word;
+}
+
+/* Kernel Spiking Substrate Box inside Telemetry */
+#substrate-live-box {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(0, 240, 255, 0.22);
+    font-size: 0.6rem;
+    color: #9ec2e6;
+}
+
+#substrate-raster {
+    width: 100%;
+    height: 32px;
+    background: #02050a;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    margin-top: 4px;
+    display: block;
+}
+
+/* --- 7. MULTI-WINDOW MANAGER --- */
 #window-layer {
-    position: absolute;
-    inset: 0;
+    position: fixed;
+    top: 36px;
+    left: 0;
+    right: 0;
+    bottom: 36px;
     z-index: 500;
     pointer-events: none;
 }
 
 .os-window {
     position: absolute;
-    width: 500px;
-    height: 340px;
-    background: rgba(3,7,15,0.94);
-    border: 1px solid rgba(0,240,255,0.4);
+    width: min(580px, calc(100vw - 115px));
+    height: min(350px, calc(100vh - 120px));
+    background: var(--bg-win);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    border-top: 2px solid var(--cyan);
     border-radius: 6px;
     display: flex;
     flex-direction: column;
     pointer-events: auto;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.85), inset 0 0 15px rgba(0,240,255,0.06);
+    box-shadow: 0 14px 45px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.12);
     backdrop-filter: blur(14px);
     overflow: hidden;
-    transition: width 0.2s ease, height 0.2s ease, left 0.2s ease, top 0.2s ease;
 }
 
 .os-window.maximized {
-    left: 12px !important;
-    top: 48px !important;
-    width: calc(100vw - 24px) !important;
-    height: calc(100vh - 98px) !important;
+    left: 8px !important;
+    top: 6px !important;
+    width: calc(100vw - 16px) !important;
+    height: calc(100vh - 88px) !important;
 }
 
 .win-header {
-    height: 32px;
-    background: #060e1c;
-    border-bottom: 1px solid rgba(0,240,255,0.3);
+    height: 30px;
+    background: linear-gradient(90deg, #061224 0%, #040914 100%);
+    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
-    cursor: move;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.win-header:active {
+    cursor: grabbing;
 }
 
 .win-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.68rem;
+    font-size: 0.65rem;
+    font-weight: 700;
     letter-spacing: 1px;
-    color: #00f0ff;
+    color: var(--cyan);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .win-actions {
     display: flex;
-    gap: 5px;
+    gap: 6px;
 }
 
 .win-btn {
-    background: transparent;
-    border: 1px solid rgba(0,240,255,0.3);
-    color: #00f0ff;
-    width: 22px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    color: var(--cyan);
+    padding: 2px 6px;
+    min-width: 24px;
     height: 20px;
-    font-size: 0.58rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3px;
+    transition: all 0.15s ease;
 }
 
 .win-btn:hover {
-    background: #00f0ff;
+    background: var(--cyan);
     color: #000;
 }
 
 .win-btn.close:hover {
-    background: #ff2a54;
-    border-color: #ff2a54;
-    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+    color: #ffffff;
 }
 
 .win-body {
@@ -436,19 +645,20 @@ body, html {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: rgba(2, 5, 11, 0.85);
 }
 
-/* --- TERMINAL STYLING --- */
+/* --- 8. TERMINAL STYLING --- */
 .term-output {
     flex: 1;
     background: #010306;
-    border: 1px solid rgba(0,240,255,0.2);
-    padding: 8px;
-    font-size: 0.76rem;
-    color: #9ec2e6;
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    padding: 8px 10px;
+    font-size: 0.74rem;
+    color: #a8d4f5;
     overflow-y: auto;
     white-space: pre-wrap;
-    line-height: 1.4;
+    line-height: 1.45;
     margin-bottom: 6px;
     border-radius: 3px;
 }
@@ -456,17 +666,19 @@ body, html {
 .term-input-line {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #02050a;
-    border: 1px solid rgba(0,240,255,0.35);
-    padding: 4px 8px;
+    gap: 8px;
+    background: #030710;
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    padding: 5px 10px;
     border-radius: 3px;
+    flex-shrink: 0;
 }
 
 .term-prompt {
-    font-size: 0.75rem;
-    color: #00ff9d;
+    font-size: 0.74rem;
+    color: var(--green);
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .term-input {
@@ -475,77 +687,36 @@ body, html {
     border: none;
     color: #ffffff;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     outline: none;
 }
 
-/* --- TASKBAR & CHRONO-CORE TIME TRAVEL SLIDER --- */
-.taskbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 44px;
-    background: rgba(2,5,10,0.92);
-    border-top: 1px solid rgba(0,240,255,0.25);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    z-index: 900;
-    backdrop-filter: blur(10px);
-}
-
-.taskbar-tabs {
-    display: flex;
-    gap: 8px;
-}
-
-.task-tab {
-    background: rgba(0,240,255,0.1);
-    border: 1px solid #00f0ff;
-    color: #00f0ff;
-    padding: 5px 12px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.68rem;
-    cursor: pointer;
-    border-radius: 3px;
-    letter-spacing: 1px;
-}
-
-.task-tab.active {
-    background: #00f0ff;
-    color: #000;
-    font-weight: bold;
-    box-shadow: 0 0 10px #00f0ff;
-}
-
-/* Chrono-Core Quantum Time-Travel Scrubber Bar */
+/* --- 9. CHRONO-CORE TIME-TRAVEL DOCK & BOTTOM TASKBAR --- */
 #chrono-dock {
     position: fixed;
-    left: 96px;
-    right: 215px;
-    bottom: 48px;
-    height: 32px;
-    background: rgba(3, 7, 15, 0.92);
+    left: 102px;
+    right: 222px;
+    bottom: 40px;
+    height: 30px;
+    background: rgba(3, 8, 16, 0.92);
     border: 1px solid rgba(0, 240, 255, 0.35);
-    border-left: 3px solid #00f0ff;
-    border-right: 3px solid #00ff9d;
+    border-left: 3px solid var(--cyan);
+    border-right: 3px solid var(--green);
     border-radius: 4px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0 12px;
-    z-index: 950;
+    gap: 8px;
+    padding: 0 10px;
+    z-index: 750;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 12px rgba(0, 240, 255, 0.08);
-    font-family: 'Share Tech Mono', monospace;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
 }
 
 .chrono-tag {
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     letter-spacing: 1px;
-    color: #00f0ff;
+    color: var(--cyan);
     white-space: nowrap;
 }
 
@@ -554,7 +725,7 @@ body, html {
     -webkit-appearance: none;
     appearance: none;
     height: 4px;
-    background: linear-gradient(90deg, #00f0ff 0%, #00ff9d 100%);
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--green) 100%);
     border-radius: 2px;
     outline: none;
     cursor: pointer;
@@ -562,11 +733,11 @@ body, html {
 
 .chrono-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
     background: #02050a;
-    border: 2px solid #00ff9d;
-    box-shadow: 0 0 10px #00ff9d;
+    border: 2px solid var(--green);
+    box-shadow: 0 0 8px var(--green);
     transform: rotate(45deg);
     cursor: grab;
 }
@@ -574,17 +745,16 @@ body, html {
 .chrono-btn {
     background: rgba(0, 240, 255, 0.1);
     border: 1px solid rgba(0, 240, 255, 0.4);
-    color: #00f0ff;
+    color: var(--cyan);
     font-family: 'Orbitron', sans-serif;
     font-size: 0.55rem;
     padding: 2px 6px;
     cursor: pointer;
-    letter-spacing: 0.8px;
-    transition: all 0.15s ease;
+    border-radius: 2px;
 }
 
 .chrono-btn:hover {
-    background: #00f0ff;
+    background: var(--cyan);
     color: #000;
 }
 
@@ -593,41 +763,70 @@ body, html {
 }
 
 @keyframes quantumFlash {
-    0% { filter: hue-rotate(90deg) brightness(1.5) contrast(1.3); }
-    100% { filter: hue-rotate(0deg) brightness(1) contrast(1); }
+    0% { filter: hue-rotate(85deg) brightness(1.4); }
+    100% { filter: hue-rotate(0deg) brightness(1); }
 }
 
-/* Substrate Spiking Raster Mini-Bar inside Right Telemetry */
-#substrate-live-box {
-    margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(0, 240, 255, 0.22);
-    font-size: 0.62rem;
-    color: #9ec2e6;
-}
-
-#substrate-raster {
-    width: 100%;
-    height: 34px;
-    background: #02050a;
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    margin-top: 4px;
-    display: block;
-}
-
-/* --- AERO-TOUCH WEBCAM & LASER CURSOR HUD --- */
-#cam-hud {
+.taskbar, .bottom-taskbar, #taskbar, footer {
     position: fixed;
-    bottom: 56px;
-    right: 16px;
-    width: 160px;
-    height: 120px;
-    background: #03060c;
-    border: 1px solid #00f0ff;
-    border-radius: 4px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: rgba(2, 6, 13, 0.94);
+    border-top: 1px solid var(--cyan-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
     z-index: 800;
+    backdrop-filter: blur(10px);
+}
+
+#taskbar-tabs, .taskbar-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+.task-tab {
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 4px 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    cursor: pointer;
+    border-radius: 3px;
+    letter-spacing: 0.8px;
+}
+
+.task-tab.active {
+    background: var(--cyan);
+    color: #000000;
+    font-weight: 700;
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+.taskbar-right, .sys-footer-tag {
+    font-size: 0.64rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+/* --- 10. AERO-TOUCH WEBCAM HUD & OPTICAL CURSOR --- */
+#cam-hud, .cam-hud {
+    position: fixed;
+    bottom: 44px;
+    right: 14px;
+    width: 150px;
+    height: 112px;
+    background: #02050a;
+    border: 1px solid var(--cyan);
+    border-radius: 5px;
+    z-index: 850;
     overflow: hidden;
-    box-shadow: 0 0 15px rgba(0,240,255,0.3);
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
 }
 
 #webcam-video {
@@ -641,36 +840,36 @@ body, html {
     display: block;
 }
 
-.cam-overlay-label {
+.cam-label, .cam-overlay-label {
     position: absolute;
-    top: 4px;
-    left: 6px;
-    font-size: 0.55rem;
-    color: #00ff9d;
-    background: rgba(0,0,0,0.6);
+    bottom: 3px;
+    left: 5px;
+    font-size: 0.52rem;
+    color: var(--green);
+    background: rgba(0, 0, 0, 0.7);
     padding: 1px 4px;
     font-family: 'Orbitron', sans-serif;
 }
 
 #aero-cursor {
     position: fixed;
-    width: 22px;
-    height: 22px;
-    border: 2px solid #00f0ff;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--cyan);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 9999;
-    box-shadow: 0 0 12px #00f0ff;
-    transition: width 0.1s, height 0.1s, background 0.1s;
+    box-shadow: 0 0 14px var(--cyan);
+    transition: width 0.08s, height 0.08s, background 0.08s;
 }
 
 #aero-cursor.pinching {
     width: 14px;
     height: 14px;
-    background: #00ff9d;
+    background: var(--green);
     border-color: #ffffff;
-    box-shadow: 0 0 20px #00ff9d;
+    box-shadow: 0 0 22px var(--green);
 }
 
 #cursor-state {
@@ -678,9 +877,63 @@ body, html {
     top: 26px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.58rem;
+    font-size: 0.56rem;
     font-family: 'Orbitron', sans-serif;
-    color: #00ff9d;
+    color: var(--green);
+    background: rgba(2, 5, 10, 0.85);
+    padding: 1px 4px;
+    border-radius: 2px;
     white-space: nowrap;
-    text-shadow: 0 0 6px #00ff9d;
+}
+
+/* --- 11. MOBILE LANDSCAPE COMPACT SCALING (FITS PHONE WIDESCREEN PERFECTLY) --- */
+@media screen and (max-height: 520px) {
+    .top-bar, .top-status-bar, #top-bar, header {
+        height: 30px;
+        padding: 0 10px;
+    }
+    .workspace-grid, .desktop-grid, .cockpit-grid, .desktop-stage, main {
+        padding: 6px 10px;
+        gap: 8px;
+    }
+    .icon-dock {
+        width: 68px;
+        gap: 6px;
+    }
+    .desk-icon {
+        width: 64px;
+        height: 48px;
+        padding: 2px;
+    }
+    .svg-cyber-icon {
+        width: 18px;
+        height: 18px;
+    }
+    .desk-icon span {
+        font-size: 0.5rem;
+    }
+    .telemetry-hud {
+        width: 175px;
+    }
+    .hud-card {
+        padding: 6px 8px;
+        font-size: 0.6rem;
+    }
+    #window-layer {
+        top: 30px;
+        bottom: 28px;
+    }
+    .os-window {
+        width: min(520px, calc(100vw - 88px));
+        height: calc(100vh - 70px);
+    }
+    #chrono-dock {
+        left: 80px;
+        right: 188px;
+        bottom: 31px;
+        height: 24px;
+    }
+    .taskbar, .bottom-taskbar, #taskbar, footer {
+        height: 28px;
+    }
 }
